@@ -5,8 +5,14 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
 
     $('#sandbox-container input').datepicker({});
 
-    $scope.varNames = ['', 'cv.', 'subsp.', 'var.'];
+    $scope.varNames = {'':'-','subsp.':'subsp.','var.':'var.','for.':'for.','cv.':'cv.'};
 
+    $scope.dataTemp = {
+        "key1": "val1",
+        "key2": "val2",
+        "key3": "val3"
+
+    };
     $scope.varNameChanged = function () {
         console.log('changed : ', $scope.data.name4);
         if (!$scope.data.name4) {
@@ -17,6 +23,21 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         $scope.data.name5 = '';
 
     }
+
+
+    // $scope.varNames = ['', 'subsp.', 'var.', 'for.', 'cv.'];
+    //
+    // $scope.varNameChanged = function () {
+    //     console.log('changed : ', $scope.data.name4);
+    //     if (!$scope.data.name4) {
+    //         $scope.isVarEmpty = true;
+    //     } else {
+    //         $scope.isVarEmpty = false;
+    //     }
+    //     $scope.data.name5 = '';
+    //
+    // }
+
 
     $scope.data = {
         "name1": "NO-NAME",

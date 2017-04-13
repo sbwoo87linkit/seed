@@ -45,9 +45,10 @@
                                            class="form-control">
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                    <!--<input type="text" ng-model="data.name4" placeholder="변종" class="form-control">-->
-                                    <select ng-model="data.name4" class="form-control" ng-options="x for x in varNames" ng-change="varNameChanged()">
-                                    </select>
+                                    <select class="form-control" ng-model="data.name4" ng-options="key as value for (key , value) in varNames"  ng-change="varNameChanged()"></select>
+                                    {{data.name4}}
+                                    <!--<select ng-model="blah" ng-options="key as value for (key , value) in dataTemp"></select>-->
+
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="!isVarEmpty">
                                     <input type="text" ng-model="data.name5" placeholder="변종소명"
