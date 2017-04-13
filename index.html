@@ -1,23 +1,370 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-cloak ng-app="myApp">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8"/>
+    <title>종자수명예측을 활용한 모니터링 최적화 소프트웨어</title>
+    <link type="text/css" rel="stylesheet" href="lib/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="lib/css/font-awesome.min.css"/>
+    <link href="lib/css/pivot.css" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" href="pivot.css"/>
+    <link href="lib/css/angular.rangeSlider.css" rel="stylesheet"/>
+    <link href="lib/angular-loading-bar/loading-bar.css" rel="stylesheet"/>
+    <!--[if lt IE 9]>
+    <script src="/js/libs/es5-shim.min.js" type="text/javascript"></script>
+    <script src="/js/libs/respond.min.js" type="text/javascript"></script>
+    <![endif]-->
 </head>
-<body>
 
-    <h1>my home</h1>
-    <ul>
-        <li>aaa</li>
-        <li>bbb</li>
-        <li>ccc</li>
-        <li>ddd</li>
-        <li>eee</li>
-        <li>fff</li>
-        <li>ggg</li>
-        <li>fff</li>
+<body ng-controller="MainController as mainVm">
 
-    </ul>
+<div class="container">
+    <h2 class="text-center">종자수명예측을 활용한 모니터링 최적화 소프트웨어</h2>
+    <br>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">입고 종자 정보</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h5>종정보</h5>
+                            <div class="row">
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <input type="text" ng-model="data.name1" placeholder="과명"
+                                           class="form-control">
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <input type="text" ng-model="data.name2" placeholder="속명" class="form-control">
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                    <input type="text" ng-model="data.name3" placeholder="종소명"
+                                           class="form-control">
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <!--<input type="text" ng-model="data.name4" placeholder="변종" class="form-control">-->
+                                    <select ng-model="data.name4" class="form-control" ng-options="x for x in varNames" ng-change="varNameChanged()">
+                                    </select>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="!isVarEmpty">
+                                    <input type="text" ng-model="data.name5" placeholder="변종소명"
+                                           class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div>
+                        <!--<button ng-click="click()">set null</button>-->
+                        <!--<div class="dropdown">-->
+                        <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
+                        <!--Dropdown-->
+                        <!--<span class="caret"></span>-->
+                        <!--</button>-->
+                        <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
+                        <!--<li><a href="#">Action</a></li>-->
+                        <!--<li><a href="#">Another action</a></li>-->
+                        <!--<li><a href="#">Something else here</a></li>-->
+                        <!--<li role="separator" class="divider"></li>-->
+                        <!--<li><a href="#">Separated link</a></li>-->
+                        <!--</ul>-->
+                        <!--</div>-->
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <h5>수분함량</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" ng-model="data.waterValue" placeholder="" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <h5>저장조건</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text"  ng-model="data.inventoryCondition" placeholder="" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <h5>입고일</h5>
+                            <div class="row">
+                                <div class="span5 col-md-12" id="sandbox-container">
+                                    <input type="text" class="form-control" data-date-format="yyyy.mm.dd"
+                                           ng-model="data.inventoryDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <h5>중량</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control" ng-model="data.weight" ng-blur="calculateLipCount()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <h5>1000립중</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control"
+                                           ng-model="data.kiloLipWeight" ng-blur="calculateLipCount()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-1 col-sm-offset-1">
+                            <h5>립수</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control" readonly
+                                           ng-model="data.lipCount">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <h5>입고활력</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control"
+                                           ng-model="data.inventoryPower">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-right">
+                        <div class="col-md-9"></div>
+                        <div class="col-md-3">
+                            <button class="btn btn-success btn-block btn-lg" type="button" ng-click="calculate()">Calculate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">지질함량에 따른 수분함량 계산</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <h5>지질함량</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control"
+                                           ng-model="data.groundValue">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <h5>건조온도</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control"
+                                           ng-model="data.dryTemperature">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <h5>건조 상대습도</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control"
+                                           ng-model="data.dryHumidity">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <h5>수분함량</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <input type="text" placeholder="" class="form-control" readonly
+                                           ng-model="data.resultWaterValue">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+
+                        <button class="btn btn-success" style="margin-top: 5px" type="button" ng-click="calculateWaterValue()">Calculate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">결과</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <h4>수명공식계수 : <span style="background: #ddd; padding: 0px 10px; margin-left: 10px">{{seed}}</span></h4>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>Ke</label>
+                                    <input type="text" ng-model="data.Ke" placeholder="" class="form-control"
+                                           readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>Cw</label>
+                                    <input type="text" ng-model="data.Cw" placeholder="" class="form-control"
+                                           readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>Ch</label>
+                                    <input type="text" ng-model="data.Ch" placeholder="" class="form-control"
+                                           readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>Cq</label>
+                                    <input type="text" ng-model="data.Cq" placeholder="" class="form-control"
+                                           readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>Sigma (Day)</label>
+                                    <input type="text" ng-model="data.sigmaDay" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>P90 (Day)</label>
+                                    <input type="text" ng-model="data.p90Day" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>P85 (Day)</label>
+                                    <input type="text" ng-model="data.p85Day" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>P80 (Day)</label>
+                                    <input type="text" ng-model="data.p80Day" placeholder="" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>Sigma (Year)</label>
+                                    <input type="text" ng-model="data.sigmaYear" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>P90 (Year)</label>
+                                    <input type="text" ng-model="data.p90Year" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>P85 (Year)</label>
+                                    <input type="text" ng-model="data.p85Year" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>P80 (Year)</label>
+                                    <input type="text" ng-model="data.p80Year" placeholder="" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                    <label>P90-P85</label>
+                                    <input type="text" ng-model="data.p90_P85" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                    <label>P85-P80</label>
+                                    <input type="text" ng-model="data.p85_P80" placeholder="" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>모니터링 기간day</label>
+                                    <input type="text" ng-model="data.monitoringDay" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>권장 검정립수</label>
+                                    <input type="text" ng-model="data.testLipCount" placeholder="" class="form-control" readonly>
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                    <label>권장 모니터링 조건</label>
+                                    <input type="text" ng-model="data.monitoringCondition" placeholder="" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <h5>&nbsp;</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <label>권장 모니터링일</label>
+                                    <textarea type="text" ng-model="data.monitoringDate" placeholder="" class="form-control" style="height:250px;"
+                                              readonly></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row text-right">
+                        <div class="col-md-10"></div>
+                        <div class="col-md-2">
+                            <button class="btn btn-success btn-block btn-lg" type="button" ng-click="save()">Save</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">데이터 입력오류</h4>
+            </div>
+            <div class="modal-body">
+                {{modalMessage}}
+            </div>
+            <!--<div class="modal-footer">-->
+            <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+            <!--&lt;!&ndash;<button type="button" class="btn btn-primary">Save changes</button>&ndash;&gt;-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+
+<script src="lib/js/jquery-latest.js"></script>
+<script src="lib/js/jquery-migrate-1.2.1.min.js"></script>
+<script src="lib/js/jquery-ui-latest.js"></script>
+<script src="lib/js/jquery-ui-1.10.3.custom.js"></script>
+<!-- <script src="lib/js/jquery.mjs.nestedSortable.js"></script> -->
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+<script src="lib/js/pivot.js"></script>
+<script src="lib/js/d3.v3.min.js"></script>
+<script src="lib/js/gchart_renderers.js"></script>
+<script src="lib/js/bootstrap.min.js"></script>
+<script src="lib/js/angular.js"></script>
+<script src="lib/js/angular.rangeSlider.js"></script>
+<script src="lib/js/typedarray.js"></script>
+<script src="lib/js/Blob.js"></script>
+<script src="lib/js/FileSaver.js"></script>
+<script src="lib/angular-loading-bar/loading-bar.js"></script>
+<script src="lib/js/bootstrap-datepicker.min.js"></script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="app.js"></script>
 </body>
+
 </html>
