@@ -1,4 +1,4 @@
-입고립수,모니터링사용립수,발아검정립수,반복수,모니터링횟수
+inventoryLipCount,monitoringUseLipCount,sproutTestLipCount,repeatCount,monitoringCount
 100,10,10,1,1
 250,25,25,1,1
 500,50,10,1,5

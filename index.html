@@ -7,17 +7,14 @@
     <title>종자수명예측을 활용한 모니터링 최적화 소프트웨어</title>
     <link type="text/css" rel="stylesheet" href="lib/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="lib/css/font-awesome.min.css"/>
-    <link href="lib/css/pivot.css" rel="stylesheet"/>
-    <link type="text/css" rel="stylesheet" href="pivot.css"/>
-    <link href="lib/css/angular.rangeSlider.css" rel="stylesheet"/>
-    <link href="lib/angular-loading-bar/loading-bar.css" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet"/>
     <!--[if lt IE 9]>
     <script src="/js/libs/es5-shim.min.js" type="text/javascript"></script>
     <script src="/js/libs/respond.min.js" type="text/javascript"></script>
     <![endif]-->
 </head>
 
-<body ng-controller="MainController as mainVm">
+<body ng-controller="MainController as mainVm" ng-cloak>
 
 <div class="container">
     <h2 class="text-center">종자수명예측을 활용한 모니터링 최적화 소프트웨어</h2>
@@ -31,7 +28,17 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h5>종정보</h5>
+                            <div class="row" style="margin-bottom: 5px;">
+                                <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <h5>종정보</h5>
+                                </div>
+                                <div class="col-md-10 col-sm-10 col-xs-12 form-group">
+                                    <select ng-model="mySeed" class="form-control" ng-options="seed.name for seed in seedData" ng-change="seedChanged(mySeed)">
+                                        <option value="">-- 종자 선택 --</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-2 col-sm-2 col-xs-12 form-group">
                                     <input type="text" ng-model="data.name1" placeholder="과명"
@@ -46,33 +53,13 @@
                                 </div>
                                 <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                     <select class="form-control" ng-model="data.name4" ng-options="key as value for (key , value) in varNames"  ng-change="varNameChanged()"></select>
-                                    {{data.name4}}
-                                    <!--<select ng-model="blah" ng-options="key as value for (key , value) in dataTemp"></select>-->
-
                                 </div>
-                                <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="!isVarEmpty">
+                                <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="data.name4">
                                     <input type="text" ng-model="data.name5" placeholder="변종소명"
                                            class="form-control">
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div>
-                        <!--<button ng-click="click()">set null</button>-->
-                        <!--<div class="dropdown">-->
-                        <!--<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
-                        <!--Dropdown-->
-                        <!--<span class="caret"></span>-->
-                        <!--</button>-->
-                        <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
-                        <!--<li><a href="#">Action</a></li>-->
-                        <!--<li><a href="#">Another action</a></li>-->
-                        <!--<li><a href="#">Something else here</a></li>-->
-                        <!--<li role="separator" class="divider"></li>-->
-                        <!--<li><a href="#">Separated link</a></li>-->
-                        <!--</ul>-->
-                        <!--</div>-->
                     </div>
 
 
@@ -167,6 +154,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <h5>Ref.&nbsp;</h5>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                    <select class="form-control" ng-model='data.groundValue' ng-options='item.oil as item.name for item in oilData'>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-xs-12">
@@ -201,6 +197,13 @@
 
                         <button class="btn btn-success" style="margin-top: 5px" type="button" ng-click="calculateWaterValue()">Calculate</button>
                     </div>
+
+                    <!--<div ng-show="oilWaters" style="width: 300px">-->
+                        <!--<hr>-->
+                    <!--</div>-->
+                    <hr ng-show="oilWaters" >
+                    <div id="container_oil"></div>
+
                 </div>
             </div>
         </div>
@@ -214,7 +217,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-10 col-sm-10 col-xs-12">
+                        <div class="col-md-9 col-sm-9 col-xs-12">
                             <h4>수명공식계수 : <span style="background: #ddd; padding: 0px 10px; margin-left: 10px">{{seed}}</span></h4>
                             <div class="row">
                                 <div class="col-md-3 col-sm-3 col-xs-12 form-group">
@@ -299,23 +302,46 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 col-sm-2 col-xs-12">
+                        <div class="col-md-3 col-sm-3 col-xs-12">
                             <h5>&nbsp;</h5>
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                     <label>권장 모니터링일</label>
-                                    <textarea type="text" ng-model="data.monitoringDate" placeholder="" class="form-control" style="height:250px;"
-                                              readonly></textarea>
+                                    <!--<textarea type="text" ng-model="data.monitoringDate" placeholder="" class="form-control" style="height:250px;"-->
+                                              <!--readonly></textarea>-->
+                                    <table class="table table-condensed">
+                                        <tr>
+                                            <th>모니터링</th>
+                                            <th>활력</th>
+                                            <th>%</th>
+                                        </tr>
+                                        <tr class="info">
+                                            <td>{{data.inventoryDate}}</td>
+                                            <td>{{data.inventoryPower}}</td>
+                                            <td>99.9%</td>
+                                        </tr>
+                                        <tr ng-repeat="item in data.monitoringDateList">
+                                            <td>{{item.date}}</td>
+                                            <td>{{item.power}}</td>
+                                            <td>{{item.percent}}</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row text-right">
-                        <div class="col-md-10"></div>
-                        <div class="col-md-2">
-                            <button class="btn btn-success btn-block btn-lg" type="button" ng-click="save()">Save</button>
-                        </div>
+
+                    <div class="text-center">
+                        <div id="container_seed"></div>
                     </div>
+
+                    <!--<div class="row text-right">-->
+                        <!--<div class="col-md-10"></div>-->
+                        <!--<div class="col-md-2">-->
+                            <!--<button class="btn btn-success btn-block btn-lg" type="button" ng-click="save()">Save</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+
 
                 </div>
             </div>
@@ -349,18 +375,18 @@
 <script src="lib/js/jquery-ui-latest.js"></script>
 <script src="lib/js/jquery-ui-1.10.3.custom.js"></script>
 <!-- <script src="lib/js/jquery.mjs.nestedSortable.js"></script> -->
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
-<script src="lib/js/pivot.js"></script>
+<!--<script type="text/javascript"-->
+        <!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>-->
+<!--<script src="lib/js/pivot.js"></script>-->
 <script src="lib/js/d3.v3.min.js"></script>
-<script src="lib/js/gchart_renderers.js"></script>
+<!--<script src="lib/js/gchart_renderers.js"></script>-->
 <script src="lib/js/bootstrap.min.js"></script>
 <script src="lib/js/angular.js"></script>
-<script src="lib/js/angular.rangeSlider.js"></script>
-<script src="lib/js/typedarray.js"></script>
+<!--<script src="lib/js/angular.rangeSlider.js"></script>-->
+<!--<script src="lib/js/typedarray.js"></script>-->
 <script src="lib/js/Blob.js"></script>
 <script src="lib/js/FileSaver.js"></script>
-<script src="lib/angular-loading-bar/loading-bar.js"></script>
+<!--<script src="lib/angular-loading-bar/loading-bar.js"></script>-->
 <script src="lib/js/bootstrap-datepicker.min.js"></script>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>

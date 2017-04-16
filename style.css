@@ -1,0 +1,60 @@
+* {
+    border-radius: 0 !important;
+}
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+
+.x_panel {
+    width: 100%;
+    padding: 10px 17px;
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #E6E9ED;
+    -webkit-column-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    column-break-inside: avoid;
+    opacity: 1;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+}
+.x_panel, .x_title {
+    margin-bottom: 10px;
+}
+.degrees:after, .x_content, .x_panel {
+    position: relative;
+}
+
+.form-group {
+    margin-bottom: 0px !important;
+}
+
+label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 0px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+h5 {
+    margin-top: 10px;
+    margin-bottom: 3px;
+}
+
+.highcharts-contextmenu hr {
+    margin-bottom: 0;
+    margin-top: 0;
+}
