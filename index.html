@@ -218,7 +218,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                            <h4>수명공식계수 : <span style="background: #ddd; padding: 0px 10px; margin-left: 10px">{{seed}}</span></h4>
+                            <h4>수명공식계수 : <span style="background: #ddd; padding: 0px 10px; margin-left: 10px">{{seedName}}</span></h4>
                             <div class="row">
                                 <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                     <label>Ke</label>
@@ -301,6 +301,11 @@
                                     <input type="text" ng-model="data.monitoringCondition" placeholder="" class="form-control" readonly>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12" style="margin-top: 30px;">
+                                    <div id="container_seed"></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-3 col-sm-3 col-xs-12">
                             <h5>&nbsp;</h5>
@@ -312,18 +317,21 @@
                                     <table class="table table-condensed">
                                         <tr>
                                             <th>모니터링</th>
-                                            <th>활력</th>
+                                            <th>예상활력</th>
                                             <th>%</th>
                                         </tr>
-                                        <tr class="info">
-                                            <td>{{data.inventoryDate}}</td>
-                                            <td>{{data.inventoryPower}}</td>
-                                            <td>99.9%</td>
-                                        </tr>
+                                        <!--<tr class="info">-->
+                                            <!--<td>{{data.inventoryDate}}</td>-->
+                                            <!--<td>{{data.inventoryPower}}</td>-->
+                                            <!--<td>99.9%</td>-->
+                                        <!--</tr>-->
+
+                                        <!--{"powerPercent":0.99,"monitoringDate":"2017.01.01","expectedPower":60}-->
+
                                         <tr ng-repeat="item in data.monitoringDateList">
                                             <td>{{item.date}}</td>
-                                            <td>{{item.power}}</td>
-                                            <td>{{item.percent}}</td>
+                                            <td>{{item.power | number:2}}</td>
+                                            <td>{{item.percent | number:1}}</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -331,9 +339,6 @@
                         </div>
                     </div>
 
-                    <div class="text-center">
-                        <div id="container_seed"></div>
-                    </div>
 
                     <!--<div class="row text-right">-->
                         <!--<div class="col-md-10"></div>-->
