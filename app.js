@@ -1,6 +1,104 @@
 var app = angular.module('myApp', []);
 
+app.directive('autoComplete', function($timeout) {
+    return function(scope, iElement, iAttrs) {
+        iElement.autocomplete({
+            source: scope[iAttrs.uiItems],
+            select: function() {
+                $timeout(function() {
+                    iElement.trigger('input');
+                }, 0);
+            }
+        });
+    };
+});
+
 app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log, $timeout) {
+
+
+    $scope.names = ["alfred", "john", "bill", "charlie", "robert", "alban", "oscar", "marie", "celine", "brad", "drew", "rebecca", "michel", "francis", "jean", "paul", "pierre", "nicolas",  "gerard", "louis", "albert", "edouard", "benoit", "guillaume", "nicolas", "joseph"];
+
+    $scope.keywords = [ 'seed', 'germination', 'ecology', 'longevity', 'viability', 'physiology'];
+
+    $scope.selection = [];
+
+    // todo : assign when species is defined.
+    $scope.keywords.unshift('angolense');
+    $scope.selection.unshift('angolense');
+
+    $scope.toggleSelection = function toggleSelection(item) {
+        var idx = $scope.selection.indexOf(item);
+        if (idx > -1) {
+            $scope.selection.splice(idx, 1);
+        }
+        else {
+            $scope.selection.push(item);
+        }
+    };
+
+    $scope.addKeyword = function (keyword) {
+        $scope.keywords.push(keyword);
+        $scope.selection.push(keyword);
+        $scope.keyword = '';
+    }
+
+    $scope.site = {name:'Google Scholar Search'}
+
+
+
+
+
+
+    $scope.search = function() {
+
+        // 구글학술검색
+        // https://scholar.google.co.kr/scholar?hl=en&q=angolense+seed+&btnG=&as_sdt=1%2C5&as_sdtp=
+        // https://scholar.google.com/scholar?q=angolense+seed
+
+        // 구글검색
+        // https://www.google.com/search?num=100&newwindow=1&rlz=1C5CHFA_enKR703KR703&q=angolense+seed+&oq=angolense+seed+&gs_l=serp.3...86653.86653.0.87836.1.1.0.0.0.0.125.125.0j1.1.0....0...1.2.64.serp..0.0.0.9am17vqh_do
+        // https://www.google.com/search?q=angolense+seed
+
+        // 구글이미지검색
+        // https://www.google.com/search?q=angolense+seed&tbm=isch
+
+        var site = $scope.site.name;
+
+        var prefix = '';
+
+        switch($scope.site.name) {
+            case 'Google Scholar Search':
+                prefix = 'https://scholar.google.com/scholar?q=';
+                break;
+            case 'Google Search':
+                prefix = 'https://www.google.com/search?q=';
+                break;
+            case 'Google Image Search':
+                prefix = 'https://www.google.com/search?tbm=isch&q=';
+                break;
+        }
+
+        var q = $scope.selection.join('+');
+
+
+
+        var url = prefix + q;
+
+
+
+        // window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+        window.open(url, '_blank', 'location=yes,scrollbars=yes,status=yes');
+
+        // https://www.google.com/search?newwindow=1&hl=en&biw=1440&bih=763&site=webhp&tbm=isch&sa=1&q=%EA%B5%AC%EA%B8%80+%EC%9D%B4%EB%AF%B8%EC%A7%80+%EA%B2%80%EC%83%89&oq=%EA%B5%AC%EA%B8%80+%EC%9D%B4%EB%AF%B8&gs_l=img.3.0.0l10.4569.15865.0.16874.15.15.0.0.0.0.285.1474.1j10j1.12.0....0...1.1j4.64.img..4.10.1086.0..35i39k1j0i67k1.rD0rl5Ck95U
+    }
+
+
+
+
+
+
+
+
 
 
     $('#sandbox-container input').datepicker({});
@@ -79,6 +177,27 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         "dryHumidity": 15,
         "resultWaterValue": 0,
     }
+
+    $scope.family = [];
+    d3.csv('data/family.csv', function (data) {
+        $scope.$apply(function () {
+
+            for(var i=0; i < data.length; i++) {
+                $scope.family.push(data[i].Family)
+            }
+        });
+    });
+
+    $scope.genus = [];
+    d3.csv('data/genus.csv', function (data) {
+        $scope.$apply(function () {
+
+            for(var i=0; i < data.length; i++) {
+                $scope.genus.push(data[i].Genus)
+            }
+        });
+    });
+
 
     d3.csv('data/seed.csv', function (data) {
         $scope.$apply(function () {
@@ -815,6 +934,7 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
                 color = Highcharts.getOptions().colors[0];
             }
             $scope.seed.scaled.push({ x: x, y: y, color: color});
+            // $scope.seed.scaled.push({ x: x, y: y, borderColor: color});
         }
 
         //
@@ -1057,6 +1177,16 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
             //     }
             // },
 
+            plotOptions: {
+                series: {
+                    marker: {
+                        fillColor: '#FFFFFF',
+                        lineWidth: 2,
+                        lineColor: null // inherit from series
+                    }
+                }
+            },
+
             series: [{
                 name: 'Viability',
                 // Define the data points. All series have a dummy year
@@ -1250,14 +1380,26 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
                 }],
             },
 
+            // plotOptions: {
+            //     line: {
+            //         dataLabels: {
+            //             enabled: true
+            //         },
+            //         // enableMouseTracking: false
+            //     }
+            // },
+
             plotOptions: {
-                line: {
-                    dataLabels: {
-                        enabled: true
-                    },
-                    // enableMouseTracking: false
+                series: {
+                    marker: {
+                        fillColor: '#FFFFFF',
+                        lineWidth: 2,
+                        lineColor: null // inherit from series
+                    }
                 }
             },
+
+
 
             // series: [{
             //     name: '수분함량',
