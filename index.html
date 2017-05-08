@@ -33,11 +33,17 @@
                                     <h5>종정보</h5>
                                 </div>
                                 <div class="col-md-10 col-sm-10 col-xs-12 form-group">
-                                    <select ng-model="mySeed" class="form-control" ng-options="seed.name for seed in seedData" ng-change="seedChanged(mySeed)">
+                                    <select ng-model="mySeed" class="form-control" ng-options="seed.name for seed in seedData">
                                         <option value="">-- 종자 선택 --</option>
                                     </select>
+                                    <!--<select ng-model="mySeed" class="form-control" ng-options="seed.name for seed in seedData" ng-change="seedChanged(mySeed)">-->
+                                        <!--<option value="">&#45;&#45; 종자 선택 &#45;&#45;</option>-->
+                                    <!--</select>-->
+
                                 </div>
                             </div>
+
+                            <!--<div>mySeed : {{mySeed}}</div>-->
 
                             <div class="row">
                                 <div class="col-md-2 col-sm-2 col-xs-12 form-group">
@@ -60,6 +66,15 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-md-12 text-right">
+                            <button class="btn btn-success" ng-click="findSeed()">Find</button>
+                        </div>
+                    </div>
+                    <div>
+                        <hr>
                     </div>
 
 
@@ -209,6 +224,36 @@
         </div>
     </div>
 
+    <!--데이터 검증용-->
+    <!--<div class="row">-->
+        <!--<div class="col-md-4">-->
+            <!--<table class="table">-->
+                <!--<tr>-->
+                    <!--<th>회차</th>-->
+                    <!--<th>powerPercent</th>-->
+                    <!--<th>normSInv</th>-->
+                    <!--<th>daysFactor</th>-->
+                    <!--<th>days</th>-->
+                    <!--<th>모니터링</th>-->
+                    <!--<th>예상활력</th>-->
+                    <!--<th>%</th>-->
+                <!--</tr>-->
+                <!--<tr ng-if="$index <= (selectedMonitoringData.monitoringCount)" ng-repeat="item in data.monitoringDateList">-->
+                    <!--<td>{{$index}}</td>-->
+                    <!--<td>{{item.powerPercent}}</td>-->
+                    <!--<td>{{item.normSInv}}</td>-->
+                    <!--<td>{{item.daysFactor}}</td>-->
+                    <!--<td>{{item.days}}</td>-->
+                    <!--<td>{{item.date}}</td>-->
+                    <!--<td>{{item.power | number:2}}</td>-->
+                    <!--<td>{{item.percent | number:1}}</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+
+        <!--</div>-->
+        <!--<div class="col-md-8"></div>-->
+    <!--</div>-->
+
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-primary">
@@ -218,7 +263,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-9 col-sm-9 col-xs-12">
-                            <h4>수명공식계수 : <span style="background: #ddd; padding: 0px 10px; margin-left: 10px">{{seedName}}</span></h4>
+                            <h4>수명공식계수 : <span style="font-size: 0.9em; padding: 0px 10px; margin-left: 10px">{{seedName}}</span></h4>
                             <div class="row">
                                 <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                     <label>Ke</label>
@@ -312,23 +357,20 @@
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                     <label>권장 모니터링일</label>
+                                    <div class="pull-right">
+                                        <button class="btn btn-success btn-xs" ng-click="exportJsonToCsv()">CSV export</button>
+                                    </div>
                                     <!--<textarea type="text" ng-model="data.monitoringDate" placeholder="" class="form-control" style="height:250px;"-->
                                               <!--readonly></textarea>-->
-                                    <table class="table table-condensed">
+                                    <table class="table">
                                         <tr>
+                                            <th>회차</th>
                                             <th>모니터링</th>
                                             <th>예상활력</th>
                                             <th>%</th>
                                         </tr>
-                                        <!--<tr class="info">-->
-                                            <!--<td>{{data.inventoryDate}}</td>-->
-                                            <!--<td>{{data.inventoryPower}}</td>-->
-                                            <!--<td>99.9%</td>-->
-                                        <!--</tr>-->
-
-                                        <!--{"powerPercent":0.99,"monitoringDate":"2017.01.01","expectedPower":60}-->
-
-                                        <tr ng-repeat="item in data.monitoringDateList">
+                                        <tr ng-if="$index <= (selectedMonitoringData.monitoringCount)" ng-repeat="item in data.monitoringDateList">
+                                            <td>{{$index}}</td>
                                             <td>{{item.date}}</td>
                                             <td>{{item.power | number:2}}</td>
                                             <td>{{item.percent | number:1}}</td>
@@ -396,6 +438,7 @@
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="lib/highcharts/export-csv.js"></script>
 <script src="app.js"></script>
 </body>
 

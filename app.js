@@ -1,6 +1,6 @@
 var app = angular.module('myApp', []);
 
-app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log) {
+app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log, $timeout) {
 
 
     $('#sandbox-container input').datepicker({});
@@ -15,7 +15,7 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
     // };
 
     $scope.varNameChanged = function () {
-        console.log('changed : ', $scope.data.name4);
+        // console.log('changed : ', $scope.data.name4);
         if (!$scope.data.name4) {
             $scope.isVarEmpty = true;
         } else {
@@ -59,6 +59,8 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         "name1": "",
         "name2": "Entandrophragma",
         "name3": "angolense",
+        // "name2": "",
+        // "name3": "",
         "name4": "",
         "name5": "",
 
@@ -132,21 +134,425 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         } else {
             $scope.data.name1 = '';
         }
-
-
     }
 
-
-    $scope.calculateLipCount = function () {
-        // console.log("lip calculate")
-        //중량/1000립중*1000
-        $scope.data.lipCount = Math.round($scope.data.weight / $scope.data.kiloLipWeight * 1000);
-
+    $scope.findSeed = function () {
+        // console.log('findSeed()');
+        var name = ($scope.data.name2 + ' ' + $scope.data.name3 + ' ' + $scope.data.name4 + ' ' + $scope.data.name5).trim();
+        // console.log(name);
+        $scope.mySeed = null;
+        for (var i=0; i < $scope.seedData.length;i++) {
+            if (name === $scope.seedData[i].name) {
+                $scope.mySeed = $scope.seedData[i];
+            }
+        }
     }
 
-    $scope.calculateLipCount()
+    //
+    // $scope.calculate2 = function () {
+    //
+    //     //--- form validatation
+    //
+    //     if (!$scope.data.name2) {
+    //         $scope.modalMessage = '속명을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.name3) {
+    //         $scope.modalMessage = '종소명을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if ($scope.data.name4 && !$scope.data.name5) {
+    //         $scope.modalMessage = '변종소명을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.waterValue || !!isNaN($scope.data.waterValue)) {
+    //         $scope.modalMessage = '수분함량에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.inventoryCondition || !!isNaN($scope.data.inventoryCondition)) {
+    //         $scope.modalMessage = '저장조건에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.weight || !!isNaN($scope.data.weight)) {
+    //         $scope.modalMessage = '중량에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.kiloLipWeight || !!isNaN($scope.data.kiloLipWeight)) {
+    //         $scope.modalMessage = '1000립중에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.lipCount || !!isNaN($scope.data.lipCount)) {
+    //         $scope.modalMessage = '올바른 중량과 1000립중 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     var searchName = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5;
+    //     searchName = searchName.trim();
+    //     // console.log(searchName.toLowerCase())
+    //     // console.log($scope.seedData);
+    //
+    //     var searchResults = $scope.seedData.filter(function (item) {
+    //         return item.name == searchName
+    //     })
+    //
+    //     if (searchResults.length > 0) {
+    //         console.log(searchResults[0])
+    //         // $scope.searchStatus = "Data found"
+    //         $scope.data.Ke = searchResults[0].Ke
+    //         $scope.data.Cw = searchResults[0].Cw
+    //         $scope.data.Ch = searchResults[0].Ch
+    //         $scope.data.Cq = searchResults[0].Cq
+    //         $scope.data.refDoc = searchResults[0].ref
+    //     } else {
+    //         console.log("Data not found")
+    //         $scope.data.name1 = "NO-NAME";
+    //         $scope.data.name2 = "Entandrophragma";
+    //         $scope.data.name3 = "angolense";
+    //         $scope.data.name4 = "";
+    //         $scope.data.name5 = "";
+    //         $scope.data.refDoc = "Tompsett, 1992"
+    //
+    //         $scope.isVarEmpty = true;
+    //
+    //         // 대체 Value
+    //         $scope.data.Ke = 4.6;
+    //         $scope.data.Cw = 2.21;
+    //         $scope.data.Ch = 0.033;
+    //         $scope.data.Cq = 0.000478;
+    //     }
+    //
+    //     $scope.seedName = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5 + " (" + $scope.data.refDoc + ")";
+    //
+    //     // console.log($scope.data.resultWaterValue)
+    //     //
+    //     // var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log10($scope.data.resultWaterValue) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
+    //     // ie에서 Math.log10 오류가 있어 Math.log(f)/Math.log(10)로 대체
+    //     var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log($scope.data.waterValue) / Math.log(10) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
+    //
+    //     console.log("logSigma : ", logSigma)
+    //     $scope.data.sigmaDay = Math.round(Math.pow(10, logSigma))
+    //     console.log("$scope.data.sigmaDay : ", $scope.data.sigmaDay)
+    //     $scope.data.sigmaYear = Math.round($scope.data.sigmaDay / 365)
+    //     // console.log("$scope.data.sigmaYear : ", $scope.data.sigmaYear)
+    //     $scope.data.p90Day = Math.round($scope.data.sigmaDay * (2.3 - 1.3))
+    //     // console.log("$scope.data.p90Day : ", $scope.data.p90Day)
+    //     $scope.data.p90Year = Math.round($scope.data.p90Day / 365)
+    //     $scope.data.p85Day = Math.round($scope.data.sigmaDay * (2.3 - 1.0))
+    //     // console.log("$scope.data.p85Day : ", $scope.data.p85Day)
+    //     $scope.data.p85Year = Math.round($scope.data.p85Day / 365)
+    //     $scope.data.p80Day = Math.round($scope.data.sigmaDay * (2.3 - 0.8))
+    //     // console.log("$scope.data.p80Day : ", $scope.data.p80Day)
+    //     $scope.data.p80Year = Math.round($scope.data.p80Day / 365)
+    //     // console.log($scope.data.inventoryDate)
+    //     $scope.data.p90_P85 = addDays($scope.data.inventoryDate, $scope.data.p90Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p85Day)
+    //     // console.log("$scope.data.p90_P85 : ", $scope.data.p90_P85)
+    //     $scope.data.p85_P80 = addDays($scope.data.inventoryDate, $scope.data.p85Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p80Day)
+    //     // console.log("$scope.data.p85_P80 : ", $scope.data.p85_P80)
+    //     $scope.data.monitoringDay = $scope.data.p80Day - $scope.data.p90Day
+    //     // console.log("$scope.data.monitoringDays : ", $scope.data.monitoringDays)
+    //     // console.log("$scope.data.lipCount : ", $scope.data.lipCount)
+    //
+    //     for (var i = $scope.monitoringData.length - 1; i >= 0; i--) {
+    //         // console.log("입고립수 : ", $scope.monitoringData[i].입고립)
+    //         // console.log(i, $scope.monitoringData[i].입고립수, Number($scope.monitoringData[i].입고립수), $scope.data.lipCount)
+    //         if (Number($scope.monitoringData[i].inventoryLipCount) <= $scope.data.lipCount) {
+    //             // console.log("==== founded ", $scope.monitoringData[i].입고립수)
+    //             $scope.selectedMonitoringData = $scope.monitoringData[i];
+    //             break
+    //         }
+    //     }
+    //
+    //     // 입고립수 inventoryLipCount
+    //     // 모니터링사용립수 monitoringUseLipCount
+    //     // 발아검정립수 sproutTestLipCount
+    //     // 반복수 : repeatCount
+    //     // 모니터링횟수 : monitoringCount
+    //
+    //     $scope.data.testLipCount = $scope.selectedMonitoringData.monitoringUseLipCount;
+    //     $scope.data.monitoringCondition = $scope.selectedMonitoringData.sproutTestLipCount + '립 ' + $scope.selectedMonitoringData.repeatCount + '반복 ' + $scope.selectedMonitoringData.monitoringCount + '회';
+    //
+    //     var interval = $scope.data.monitoringDay / ($scope.selectedMonitoringData.monitoringCount - 1 );
+    //     console.log('$scope.data.p90Day : ', $scope.data.p90Day)
+    //     var baseDate = addDays($scope.data.inventoryDate, $scope.data.p90Day)
+    //     // console.log(baseDate)
+    //     // baseDate = "2615.03.15"
+    //
+    //     $scope.data.monitoringDateList = []
+    //     $scope.data.monitoringDateList.push( { date : baseDate, power : 99, percent : 99 } )
+    //     $scope.data.monitoringDate = baseDate;
+    //     for (var i = 0; i < $scope.selectedMonitoringData.monitoringCount - 1; i++) {
+    //         // console.log("i : ", i, addDays(baseDate, interval * (i + 1) ))
+    //         $scope.data.monitoringDate = $scope.data.monitoringDate + "\n" + addDays(baseDate, interval * (i + 1))
+    //         $scope.data.monitoringDateList.push( { date : addDays(baseDate, interval * (i + 1)), power : 99, percent : 99 } )
+    //         //if ()
+    //     }
+    //     console.log($scope.data.monitoringDateList)
+    //
+    //     renderSeedChart();
+    //
+    // }
+    //
+    // $scope.calculate1 = function () {
+    //
+    //     //--- form validatation
+    //
+    //     if (!$scope.data.name2) {
+    //         $scope.modalMessage = '속명을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.name3) {
+    //         $scope.modalMessage = '종소명을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if ($scope.data.name4 && !$scope.data.name5) {
+    //         $scope.modalMessage = '변종소명을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.waterValue || !!isNaN($scope.data.waterValue)) {
+    //         $scope.modalMessage = '수분함량에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.inventoryCondition || !!isNaN($scope.data.inventoryCondition)) {
+    //         $scope.modalMessage = '저장조건에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.weight || !!isNaN($scope.data.weight)) {
+    //         $scope.modalMessage = '중량에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.kiloLipWeight || !!isNaN($scope.data.kiloLipWeight)) {
+    //         $scope.modalMessage = '1000립중에 Numeric 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     if (!$scope.data.lipCount || !!isNaN($scope.data.lipCount)) {
+    //         $scope.modalMessage = '올바른 중량과 1000립중 값을 입력해 주세요.'
+    //         $('#myModal').modal('show')
+    //         return;
+    //     }
+    //
+    //     var searchName = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5;
+    //     searchName = searchName.trim();
+    //     // console.log(searchName.toLowerCase())
+    //     // console.log($scope.seedData);
+    //
+    //     var searchResults = $scope.seedData.filter(function (item) {
+    //         return item.name == searchName
+    //     })
+    //
+    //     if (searchResults.length > 0) {
+    //         console.log(searchResults[0])
+    //         // $scope.searchStatus = "Data found"
+    //         $scope.data.Ke = searchResults[0].Ke
+    //         $scope.data.Cw = searchResults[0].Cw
+    //         $scope.data.Ch = searchResults[0].Ch
+    //         $scope.data.Cq = searchResults[0].Cq
+    //         $scope.data.refDoc = searchResults[0].ref
+    //     } else {
+    //         console.log("Data not found")
+    //         $scope.data.name1 = "NO-NAME";
+    //         $scope.data.name2 = "Entandrophragma";
+    //         $scope.data.name3 = "angolense";
+    //         $scope.data.name4 = "";
+    //         $scope.data.name5 = "";
+    //         $scope.data.refDoc = "Tompsett, 1992"
+    //
+    //         $scope.isVarEmpty = true;
+    //
+    //         // 대체 Value
+    //         $scope.data.Ke = 4.6;
+    //         $scope.data.Cw = 2.21;
+    //         $scope.data.Ch = 0.033;
+    //         $scope.data.Cq = 0.000478;
+    //     }
+    //
+    //     $scope.seed = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5 + " (" + $scope.data.refDoc + ")";
+    //
+    //     // console.log($scope.data.resultWaterValue)
+    //     //
+    //     // var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log10($scope.data.resultWaterValue) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
+    //     // ie에서 Math.log10 오류가 있어 Math.log(f)/Math.log(10)로 대체
+    //     var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log($scope.data.waterValue) / Math.log(10) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
+    //
+    //     console.log("logSigma : ", logSigma)
+    //     $scope.data.sigmaDay = Math.round(Math.pow(10, logSigma))
+    //     $scope.data.sigmaDay = 4891;
+    //     //
+    //     // console.log("$scope.data.sigmaDay : ", $scope.data.sigmaDay)
+    //     // $scope.data.sigmaYear = Math.round($scope.data.sigmaDay / 365)
+    //     // // console.log("$scope.data.sigmaYear : ", $scope.data.sigmaYear)
+    //     // $scope.data.p90Day = Math.round($scope.data.sigmaDay * (2.3 - 1.3))
+    //     // // console.log("$scope.data.p90Day : ", $scope.data.p90Day)
+    //     // $scope.data.p90Year = Math.round($scope.data.p90Day / 365)
+    //     // $scope.data.p85Day = Math.round($scope.data.sigmaDay * (2.3 - 1.0))
+    //     // // console.log("$scope.data.p85Day : ", $scope.data.p85Day)
+    //     // $scope.data.p85Year = Math.round($scope.data.p85Day / 365)
+    //     // $scope.data.p80Day = Math.round($scope.data.sigmaDay * (2.3 - 0.8))
+    //     // // console.log("$scope.data.p80Day : ", $scope.data.p80Day)
+    //     // $scope.data.p80Year = Math.round($scope.data.p80Day / 365)
+    //     // // console.log($scope.data.inventoryDate)
+    //     // $scope.data.p90_P85 = addDays($scope.data.inventoryDate, $scope.data.p90Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p85Day)
+    //     // // console.log("$scope.data.p90_P85 : ", $scope.data.p90_P85)
+    //     // $scope.data.p85_P80 = addDays($scope.data.inventoryDate, $scope.data.p85Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p80Day)
+    //     // // console.log("$scope.data.p85_P80 : ", $scope.data.p85_P80)
+    //     // $scope.data.monitoringDay = $scope.data.p80Day - $scope.data.p90Day
+    //     // // console.log("$scope.data.monitoringDays : ", $scope.data.monitoringDays)
+    //     // // console.log("$scope.data.lipCount : ", $scope.data.lipCount)
+    //     //
+    //     for (var i = $scope.monitoringData.length - 1; i >= 0; i--) {
+    //         // console.log("입고립수 : ", $scope.monitoringData[i].입고립)
+    //         // console.log(i, $scope.monitoringData[i].입고립수, Number($scope.monitoringData[i].입고립수), $scope.data.lipCount)
+    //         if (Number($scope.monitoringData[i].inventoryLipCount) <= $scope.data.lipCount) {
+    //             // console.log("==== founded ", $scope.monitoringData[i].입고립수)
+    //             $scope.selectedMonitoringData = $scope.monitoringData[i];
+    //             break
+    //         }
+    //     }
+    //     console.log('monitoringCount :', $scope.selectedMonitoringData.monitoringCount);
+    //
+    //     $scope.data.monitoringDateList = [];
+    //     var diff = (0.9 - 0.8) / ($scope.selectedMonitoringData.monitoringCount - 1);
+    //     console.log('diff : ', diff)
+    //     // 활력확율 powerPercent	활력변환 powerTrans	날짜계산용 dateCalc	모니터링 monitroingDays	모니터링일(X) monitoringDate	에상활력(Y) expectedPower
+    //     var item = {
+    //         percent: 0.990 * 100,
+    //         date : $scope.data.inventoryDate,
+    //         power: Number($scope.data.inventoryPower)
+    //     }
+    //     $scope.data.monitoringDateList.push(item);
+    //     var baseNormSInv = NormSInv(0.990)
+    //
+    //     for (var i = 0; i < $scope.selectedMonitoringData.monitoringCount; i++) {
+    //         // console.log(i)
+    //
+    //         var percent = 0.9 - (diff * i);
+    //         var normSInv = NormSInv(percent);
+    //         var daysFactor = baseNormSInv - normSInv;
+    //         var days = $scope.data.sigmaDay * daysFactor;
+    //         console.log('days', days)
+    //
+    //         console.log(percent, normSInv)
+    //         item = {
+    //             percent: percent * 100,
+    //             date: addDays($scope.data.inventoryDate, days),
+    //             power: Math.round($scope.data.inventoryPower * percent * 100) / 100
+    //         }
+    //         $scope.data.monitoringDateList.push(item);
+    //
+    //     }
+    //
+    //     for (var i = 7; i > 0; i--) {
+    //         // console.log(i)
+    //         // item = {
+    //         //     percent: i * 10
+    //         // }
+    //         // $scope.data.monitoringDateList.push(item);
+    //
+    //         var percent = 0.1  * i;
+    //         var normSInv = NormSInv(percent);
+    //         var daysFactor = baseNormSInv - normSInv;
+    //         var days = $scope.data.sigmaDay * daysFactor;
+    //         console.log('days', days)
+    //
+    //         console.log(percent, normSInv)
+    //         item = {
+    //             percent: percent * 100,
+    //             date: addDays($scope.data.inventoryDate, days),
+    //             power: Math.round($scope.data.inventoryPower * percent * 100) / 100
+    //         }
+    //         $scope.data.monitoringDateList.push(item);
+    //
+    //
+    //     }
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //     console.log($scope.data.monitoringDateList)
+    //
+    //
+    //     //
+    //     // // 입고립수 inventoryLipCount
+    //     // // 모니터링사용립수 monitoringUseLipCount
+    //     // // 발아검정립수 sproutTestLipCount
+    //     // // 반복수 : repeatCount
+    //     // // 모니터링횟수 : monitoringCount
+    //     //
+    //     // $scope.data.testLipCount = $scope.selectedMonitoringData.monitoringUseLipCount;
+    //     // $scope.data.monitoringCondition = $scope.selectedMonitoringData.sproutTestLipCount + '립 ' + $scope.selectedMonitoringData.repeatCount + '반복 ' + $scope.selectedMonitoringData.monitoringCount + '회';
+    //     //
+    //     // var interval = $scope.data.monitoringDay / ($scope.selectedMonitoringData.monitoringCount - 1 );
+    //     // console.log('$scope.data.p90Day : ', $scope.data.p90Day)
+    //     // var baseDate = addDays($scope.data.inventoryDate, $scope.data.p90Day)
+    //     // // console.log(baseDate)
+    //     // // baseDate = "2615.03.15"
+    //     //
+    //     // $scope.data.monitoringDateList = []
+    //     // $scope.data.monitoringDateList.push( { date : baseDate, power : 99, percent : 99 } )
+    //     // $scope.data.monitoringDate = baseDate;
+    //     // for (var i = 0; i < $scope.selectedMonitoringData.monitoringCount - 1; i++) {
+    //     //     // console.log("i : ", i, addDays(baseDate, interval * (i + 1) ))
+    //     //     $scope.data.monitoringDate = $scope.data.monitoringDate + "\n" + addDays(baseDate, interval * (i + 1))
+    //     //     $scope.data.monitoringDateList.push( { date : addDays(baseDate, interval * (i + 1)), power : 99, percent : 99 } )
+    //     // }
+    //
+    //
+    //
+    //     $scope.seed = {};
+    //     $scope.seed.dates = []
+    //     $scope.seed.powers = []
+    //
+    //
+    //     for(var i = 0; i < $scope.data.monitoringDateList.length; i++) {
+    //         // console.log("i", i);
+    //         $scope.seed.dates.push($scope.data.monitoringDateList[i].date);
+    //         $scope.seed.powers.push($scope.data.monitoringDateList[i].power);
+    //     }
+    //
+    //
+    //
+    //     console.log($scope.seed.dates);
+    //     console.log($scope.seed.powers);
+    //
+    //
+    //
+    //     renderSeedChart();
+    //
+    // }
 
-    $scope.calculate2 = function () {
+    $scope.calculate = function () {
 
         //--- form validatation
 
@@ -161,6 +567,7 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
             $('#myModal').modal('show')
             return;
         }
+
 
         if ($scope.data.name4 && !$scope.data.name5) {
             $scope.modalMessage = '변종소명을 입력해 주세요.'
@@ -208,7 +615,7 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         })
 
         if (searchResults.length > 0) {
-            console.log(searchResults[0])
+            // console.log(searchResults[0])
             // $scope.searchStatus = "Data found"
             $scope.data.Ke = searchResults[0].Ke
             $scope.data.Cw = searchResults[0].Cw
@@ -216,7 +623,7 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
             $scope.data.Cq = searchResults[0].Cq
             $scope.data.refDoc = searchResults[0].ref
         } else {
-            console.log("Data not found")
+            // console.log("Data not found")
             $scope.data.name1 = "NO-NAME";
             $scope.data.name2 = "Entandrophragma";
             $scope.data.name3 = "angolense";
@@ -240,185 +647,33 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         // var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log10($scope.data.resultWaterValue) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
         // ie에서 Math.log10 오류가 있어 Math.log(f)/Math.log(10)로 대체
         var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log($scope.data.waterValue) / Math.log(10) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
-
-        console.log("logSigma : ", logSigma)
+        // console.log("logSigma : ", logSigma)
         $scope.data.sigmaDay = Math.round(Math.pow(10, logSigma))
-        console.log("$scope.data.sigmaDay : ", $scope.data.sigmaDay)
-        $scope.data.sigmaYear = Math.round($scope.data.sigmaDay / 365)
-        // console.log("$scope.data.sigmaYear : ", $scope.data.sigmaYear)
-        $scope.data.p90Day = Math.round($scope.data.sigmaDay * (2.3 - 1.3))
-        // console.log("$scope.data.p90Day : ", $scope.data.p90Day)
-        $scope.data.p90Year = Math.round($scope.data.p90Day / 365)
-        $scope.data.p85Day = Math.round($scope.data.sigmaDay * (2.3 - 1.0))
-        // console.log("$scope.data.p85Day : ", $scope.data.p85Day)
-        $scope.data.p85Year = Math.round($scope.data.p85Day / 365)
-        $scope.data.p80Day = Math.round($scope.data.sigmaDay * (2.3 - 0.8))
-        // console.log("$scope.data.p80Day : ", $scope.data.p80Day)
-        $scope.data.p80Year = Math.round($scope.data.p80Day / 365)
-        // console.log($scope.data.inventoryDate)
-        $scope.data.p90_P85 = addDays($scope.data.inventoryDate, $scope.data.p90Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p85Day)
-        // console.log("$scope.data.p90_P85 : ", $scope.data.p90_P85)
-        $scope.data.p85_P80 = addDays($scope.data.inventoryDate, $scope.data.p85Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p80Day)
-        // console.log("$scope.data.p85_P80 : ", $scope.data.p85_P80)
-        $scope.data.monitoringDay = $scope.data.p80Day - $scope.data.p90Day
-        // console.log("$scope.data.monitoringDays : ", $scope.data.monitoringDays)
-        // console.log("$scope.data.lipCount : ", $scope.data.lipCount)
-
-        for (var i = $scope.monitoringData.length - 1; i >= 0; i--) {
-            // console.log("입고립수 : ", $scope.monitoringData[i].입고립)
-            // console.log(i, $scope.monitoringData[i].입고립수, Number($scope.monitoringData[i].입고립수), $scope.data.lipCount)
-            if (Number($scope.monitoringData[i].inventoryLipCount) <= $scope.data.lipCount) {
-                // console.log("==== founded ", $scope.monitoringData[i].입고립수)
-                $scope.selectedMonitoringData = $scope.monitoringData[i];
-                break
-            }
-        }
-
-        // 입고립수 inventoryLipCount
-        // 모니터링사용립수 monitoringUseLipCount
-        // 발아검정립수 sproutTestLipCount
-        // 반복수 : repeatCount
-        // 모니터링횟수 : monitoringCount
-
-        $scope.data.testLipCount = $scope.selectedMonitoringData.monitoringUseLipCount;
-        $scope.data.monitoringCondition = $scope.selectedMonitoringData.sproutTestLipCount + '립 ' + $scope.selectedMonitoringData.repeatCount + '반복 ' + $scope.selectedMonitoringData.monitoringCount + '회';
-
-        var interval = $scope.data.monitoringDay / ($scope.selectedMonitoringData.monitoringCount - 1 );
-        console.log('$scope.data.p90Day : ', $scope.data.p90Day)
-        var baseDate = addDays($scope.data.inventoryDate, $scope.data.p90Day)
-        // console.log(baseDate)
-        // baseDate = "2615.03.15"
-
-        $scope.data.monitoringDateList = []
-        $scope.data.monitoringDateList.push( { date : baseDate, power : 99, percent : 99 } )
-        $scope.data.monitoringDate = baseDate;
-        for (var i = 0; i < $scope.selectedMonitoringData.monitoringCount - 1; i++) {
-            // console.log("i : ", i, addDays(baseDate, interval * (i + 1) ))
-            $scope.data.monitoringDate = $scope.data.monitoringDate + "\n" + addDays(baseDate, interval * (i + 1))
-            $scope.data.monitoringDateList.push( { date : addDays(baseDate, interval * (i + 1)), power : 99, percent : 99 } )
-        }
-
-        renderSeedChart();
-
-    }
-
-    $scope.calculate = function () {
-
-        //--- form validatation
-
-        if (!$scope.data.name2) {
-            $scope.modalMessage = '속명을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        if (!$scope.data.name3) {
-            $scope.modalMessage = '종소명을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        if ($scope.data.name4 && !$scope.data.name5) {
-            $scope.modalMessage = '변종소명을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        if (!$scope.data.waterValue || !!isNaN($scope.data.waterValue)) {
-            $scope.modalMessage = '수분함량에 Numeric 값을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        if (!$scope.data.inventoryCondition || !!isNaN($scope.data.inventoryCondition)) {
-            $scope.modalMessage = '저장조건에 Numeric 값을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        if (!$scope.data.weight || !!isNaN($scope.data.weight)) {
-            $scope.modalMessage = '중량에 Numeric 값을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        if (!$scope.data.kiloLipWeight || !!isNaN($scope.data.kiloLipWeight)) {
-            $scope.modalMessage = '1000립중에 Numeric 값을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        if (!$scope.data.lipCount || !!isNaN($scope.data.lipCount)) {
-            $scope.modalMessage = '올바른 중량과 1000립중 값을 입력해 주세요.'
-            $('#myModal').modal('show')
-            return;
-        }
-
-        var searchName = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5;
-        searchName = searchName.trim();
-        // console.log(searchName.toLowerCase())
-        // console.log($scope.seedData);
-
-        var searchResults = $scope.seedData.filter(function (item) {
-            return item.name == searchName
-        })
-
-        if (searchResults.length > 0) {
-            console.log(searchResults[0])
-            // $scope.searchStatus = "Data found"
-            $scope.data.Ke = searchResults[0].Ke
-            $scope.data.Cw = searchResults[0].Cw
-            $scope.data.Ch = searchResults[0].Ch
-            $scope.data.Cq = searchResults[0].Cq
-            $scope.data.refDoc = searchResults[0].ref
-        } else {
-            console.log("Data not found")
-            $scope.data.name1 = "NO-NAME";
-            $scope.data.name2 = "Entandrophragma";
-            $scope.data.name3 = "angolense";
-            $scope.data.name4 = "";
-            $scope.data.name5 = "";
-            $scope.data.refDoc = "Tompsett, 1992"
-
-            $scope.isVarEmpty = true;
-
-            // 대체 Value
-            $scope.data.Ke = 4.6;
-            $scope.data.Cw = 2.21;
-            $scope.data.Ch = 0.033;
-            $scope.data.Cq = 0.000478;
-        }
-
-        $scope.seed = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5 + " (" + $scope.data.refDoc + ")";
-
-        // console.log($scope.data.resultWaterValue)
-        //
-        // var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log10($scope.data.resultWaterValue) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
-        // ie에서 Math.log10 오류가 있어 Math.log(f)/Math.log(10)로 대체
-        var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log($scope.data.waterValue) / Math.log(10) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
-
-        console.log("logSigma : ", logSigma)
-        $scope.data.sigmaDay = Math.round(Math.pow(10, logSigma))
-        $scope.data.sigmaDay = 4891;
+        // $scope.data.sigmaDay = 4891;
         //
         // console.log("$scope.data.sigmaDay : ", $scope.data.sigmaDay)
-        // $scope.data.sigmaYear = Math.round($scope.data.sigmaDay / 365)
+
+
+
+
+        $scope.data.sigmaYear = Math.round($scope.data.sigmaDay / 365)
         // // console.log("$scope.data.sigmaYear : ", $scope.data.sigmaYear)
         // $scope.data.p90Day = Math.round($scope.data.sigmaDay * (2.3 - 1.3))
+        $scope.data.p90Day = Math.round(getDays(0.9));
         // // console.log("$scope.data.p90Day : ", $scope.data.p90Day)
-        // $scope.data.p90Year = Math.round($scope.data.p90Day / 365)
-        // $scope.data.p85Day = Math.round($scope.data.sigmaDay * (2.3 - 1.0))
+        $scope.data.p90Year = Math.round($scope.data.p90Day / 365)
+        $scope.data.p85Day = Math.round(getDays(0.85));
         // // console.log("$scope.data.p85Day : ", $scope.data.p85Day)
-        // $scope.data.p85Year = Math.round($scope.data.p85Day / 365)
-        // $scope.data.p80Day = Math.round($scope.data.sigmaDay * (2.3 - 0.8))
+        $scope.data.p85Year = Math.round($scope.data.p85Day / 365)
+        $scope.data.p80Day = Math.round(getDays(0.8));
         // // console.log("$scope.data.p80Day : ", $scope.data.p80Day)
-        // $scope.data.p80Year = Math.round($scope.data.p80Day / 365)
+        $scope.data.p80Year = Math.round($scope.data.p80Day / 365)
         // // console.log($scope.data.inventoryDate)
-        // $scope.data.p90_P85 = addDays($scope.data.inventoryDate, $scope.data.p90Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p85Day)
+        $scope.data.p90_P85 = addDays($scope.data.inventoryDate, $scope.data.p90Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p85Day)
         // // console.log("$scope.data.p90_P85 : ", $scope.data.p90_P85)
-        // $scope.data.p85_P80 = addDays($scope.data.inventoryDate, $scope.data.p85Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p80Day)
+        $scope.data.p85_P80 = addDays($scope.data.inventoryDate, $scope.data.p85Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p80Day)
         // // console.log("$scope.data.p85_P80 : ", $scope.data.p85_P80)
-        // $scope.data.monitoringDay = $scope.data.p80Day - $scope.data.p90Day
+        $scope.data.monitoringDay = $scope.data.p80Day - $scope.data.p90Day
         // // console.log("$scope.data.monitoringDays : ", $scope.data.monitoringDays)
         // // console.log("$scope.data.lipCount : ", $scope.data.lipCount)
         //
@@ -431,11 +686,12 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
                 break
             }
         }
-        console.log('monitoringCount :', $scope.selectedMonitoringData.monitoringCount);
+        // console.log('monitoringCount :', $scope.selectedMonitoringData.monitoringCount);
 
         $scope.data.monitoringDateList = [];
-        var diff = (0.9 - 0.8) / ($scope.selectedMonitoringData.monitoringCount - 1);
-        console.log('diff : ', diff)
+        $scope.data.viability = {'p90' : 0, 'p80':0 };
+        var diff = Math.round((0.9 - 0.8) / ($scope.selectedMonitoringData.monitoringCount - 1) * 10000) / 10000;
+        // console.log('diff : ', diff)
         // 활력확율 powerPercent	활력변환 powerTrans	날짜계산용 dateCalc	모니터링 monitroingDays	모니터링일(X) monitoringDate	에상활력(Y) expectedPower
         var item = {
             percent: 0.990 * 100,
@@ -443,24 +699,35 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
             power: Number($scope.data.inventoryPower)
         }
         $scope.data.monitoringDateList.push(item);
-        var baseNormSInv = NormSInv(0.990)
+        var baseNormSInv = NormSInv(0.990);
 
         for (var i = 0; i < $scope.selectedMonitoringData.monitoringCount; i++) {
             // console.log(i)
 
-            var percent = 0.9 - (diff * i);
-            var normSInv = NormSInv(percent);
-            var daysFactor = baseNormSInv - normSInv;
-            var days = $scope.data.sigmaDay * daysFactor;
-            console.log('days', days)
+            var percent = Math.round( (0.9 - (diff * i)) *  1000) / 1000;
+            var normSInv = Math.round(NormSInv(percent) * 1000) / 1000;
+            var daysFactor = Math.round( (baseNormSInv - normSInv) *1000) / 1000;
+            var days = Math.round($scope.data.sigmaDay * daysFactor);
+            // console.log('days', days)
 
-            console.log(percent, normSInv)
+            // console.log(percent, normSInv)
             item = {
-                percent: percent * 100,
+                powerPercent: percent,
+                normSInv: normSInv,
+                daysFactor: daysFactor,
+                days: days,
+                percent: Math.round(percent * 100 * 10) / 10,
                 date: addDays($scope.data.inventoryDate, days),
                 power: Math.round($scope.data.inventoryPower * percent * 100) / 100
             }
+
             $scope.data.monitoringDateList.push(item);
+            if (item.percent === 90) {
+                $scope.data.viability.p90 = item.power;
+            }
+            if (item.percent === 80) {
+                $scope.data.viability.p80 = item.power;
+            }
 
         }
 
@@ -475,11 +742,11 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
             var normSInv = NormSInv(percent);
             var daysFactor = baseNormSInv - normSInv;
             var days = $scope.data.sigmaDay * daysFactor;
-            console.log('days', days)
+            // console.log('days', days)
 
-            console.log(percent, normSInv)
+            // console.log(percent, normSInv)
             item = {
-                percent: percent * 100,
+                percent: Math.round(percent * 100 * 10) / 10,
                 date: addDays($scope.data.inventoryDate, days),
                 power: Math.round($scope.data.inventoryPower * percent * 100) / 100
             }
@@ -495,7 +762,7 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
 
 
 
-        console.log($scope.data.monitoringDateList)
+        // console.log($scope.data.monitoringDateList)
 
 
         //
@@ -505,8 +772,8 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         // // 반복수 : repeatCount
         // // 모니터링횟수 : monitoringCount
         //
-        // $scope.data.testLipCount = $scope.selectedMonitoringData.monitoringUseLipCount;
-        // $scope.data.monitoringCondition = $scope.selectedMonitoringData.sproutTestLipCount + '립 ' + $scope.selectedMonitoringData.repeatCount + '반복 ' + $scope.selectedMonitoringData.monitoringCount + '회';
+        $scope.data.testLipCount = $scope.selectedMonitoringData.monitoringUseLipCount;
+        $scope.data.monitoringCondition = $scope.selectedMonitoringData.sproutTestLipCount + '립 ' + $scope.selectedMonitoringData.repeatCount + '반복 ' + $scope.selectedMonitoringData.monitoringCount + '회';
         //
         // var interval = $scope.data.monitoringDay / ($scope.selectedMonitoringData.monitoringCount - 1 );
         // console.log('$scope.data.p90Day : ', $scope.data.p90Day)
@@ -525,27 +792,59 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
 
 
 
-        $scope.seed = {};
+        $scope.seed = [];
         $scope.seed.dates = []
         $scope.seed.powers = []
+        $scope.seed.scaled = []
 
+
+        //new Date('2017.01.01').getTime()
 
         for(var i = 0; i < $scope.data.monitoringDateList.length; i++) {
             // console.log("i", i);
             $scope.seed.dates.push($scope.data.monitoringDateList[i].date);
             $scope.seed.powers.push($scope.data.monitoringDateList[i].power);
+            var date = new Date('2017.01.01').getTime();
+            // $scope.seed.scaled.push([ new Date($scope.data.monitoringDateList[i].date).getTime(), $scope.data.monitoringDateList[i].power]);
+            var x= new Date($scope.data.monitoringDateList[i].date).getTime();
+            var y= $scope.data.monitoringDateList[i].power;
+            var color;
+            if (y <= $scope.data.viability.p90 && y >= $scope.data.viability.p80) {
+                color = 'red';
+            } else {
+                color = Highcharts.getOptions().colors[0];
+            }
+            $scope.seed.scaled.push({ x: x, y: y, color: color});
         }
 
+        //
+        // console.log($scope.seed.scaled)
 
-
-        console.log($scope.seed.dates);
-        console.log($scope.seed.powers);
+        // data: [
+        //     [Date.UTC(1965, 9, 21), 0],
+        // console.log($scope.seed.dates);
+        // console.log($scope.seed.powers);
 
 
 
         renderSeedChart();
 
     }
+
+
+    $scope.calculateLipCount = function () {
+        // console.log("lip calculate")
+        //중량/1000립중*1000
+        $scope.data.lipCount = Math.round($scope.data.weight / $scope.data.kiloLipWeight * 1000);
+
+        // ------------
+        //   TEST
+        // ------------
+        // $timeout($scope.calculate)
+
+    }
+
+    $scope.calculateLipCount()
 
     $scope.calculateWaterValue = function () {
 
@@ -576,16 +875,38 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         $scope.data.resultWaterValue = Math.round(100 * Me / ( 100 + Me) * 100) / 100;
 
 
+        // $scope.oilWaters = {
+        //     humidity : [10, 15, 20, 30, 40, 50, 60, 70, 80],
+        //     water : [],
+        //     all: []
+        // }
+
         $scope.oilWaters = {
             humidity : [10, 20, 30, 40, 50, 60, 70, 80],
-            water : []
+            water : [],
+            all: []
         }
+
+        $scope.oilWaters.humidity.push($scope.data.dryHumidity);
+
+        $scope.oilWaters.humidity.sort(function(a, b) {
+            return a - b;
+        });
+
+
+
 
         for (var i=0; i < $scope.oilWaters.humidity.length; i ++) {
             var Me = ((1 - $scope.data.groundValue / 100) * Math.sqrt(-440 * Math.log(1 - ($scope.oilWaters.humidity[i]) / 100))) / (1.1 + ($scope.data.dryTemperature / 90) )
             var waterValue = Math.round(100 * Me / ( 100 + Me) * 100) / 100;
 
             $scope.oilWaters.water.push(waterValue);
+            if ($scope.oilWaters.humidity[i] === $scope.data.dryHumidity) {
+                $scope.oilWaters.all.push({x: $scope.oilWaters.humidity[i], y: waterValue, color: 'red'});
+            } else {
+                $scope.oilWaters.all.push([$scope.oilWaters.humidity[i], waterValue]);
+            }
+            // $scope.oilWaters.all.push([$scope.oilWaters.humidity[i], waterValue]);
         }
         console.log($scope.oilWaters);
 
@@ -597,7 +918,167 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
 
     // $scope.calculateWaterValue()
 
-    function renderSeedChart() {
+    function getDays(percent) {
+        // var diff = (0.9 - 0.8) / ($scope.selectedMonitoringData.monitoringCount - 1);
+        // var percent = value - (diff * i);
+
+
+        var baseNormSInv = NormSInv(0.990);
+        // var percent = Math.round( (0.9 - (diff * i)) *  1000) / 1000;
+        var normSInv = Math.round(NormSInv(percent) * 1000) / 1000;
+        var daysFactor = Math.round( (baseNormSInv - normSInv) *1000) / 1000;
+        var days = Math.round($scope.data.sigmaDay * daysFactor);
+
+
+
+        // var normSInv = NormSInv(percent);
+        // var daysFactor = baseNormSInv - normSInv;
+        // var days = $scope.data.sigmaDay * daysFactor;
+        return days;
+
+    }
+
+    function renderSeedChart(){
+
+        console.log('seed chart...')
+
+        // console.log($scope.seed);
+        // console.log('$scope.data.viability.p90', $scope.data.viability.p90);
+        // console.log('$scope.data.viability.p80', $scope.data.viability.p80);
+
+        Highcharts.chart('container_seed', {
+            chart: {
+                type: 'spline'
+            },
+
+            credits : { enabled: false},
+
+            title: {
+                text: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + formatDate(new Date),
+                style: {
+                    fontWeight: 'bold',
+                    fontSize: "24px"
+                }
+            },
+
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: 'Date'
+                }
+            },
+
+            yAxis: {
+                title: {
+                    text: 'Viability(%)'
+                },
+                min: 0
+            },
+
+            legend: {
+                enabled: false,
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            tooltip : {
+                // formatter: function() {
+                //     // console.log('tooltip', this.point.color.stops[1][1])
+                //     var tooltip;
+                //     if (this.key == 'last') {
+                //         tooltip = '<b>Final result is </b> ' + this.y;
+                //     }
+                //     else {
+                //         tooltip =  '';
+                //     }
+                //     // %A, %b %e, %Y, %H:%M
+                //     tooltip =  '<span style="color:' + this.series.color + '">' + 'Date' + '</span>: <b>' + Highcharts.dateFormat('%Y.%m.%d', new Date(this.x + 3600000 * 24)) + '</b><br/>';
+                //     // tooltip =  '<span style="color:' + this.series.color + '">' + 'Date' + '</span>: <b>' + Highcharts.dateFormat('%A, %b %e, %Y, %H:%M', new Date(this.x + 13600000)) + '</b><br/>';
+                //     tooltip = tooltip + '<span style="color:' + this.series.color + '">' + this.series.name + '</span>: <b>' + this.y + '</b><br/>'
+                //     return tooltip;
+                // },
+                crosshairs: [{
+                    width: 1,
+                    dashStyle: 'solid',
+                    color: 'red'
+                }, {
+                    width: 1,
+                    dashStyle: 'solid',
+                    color: 'red'
+                }],
+            },
+
+            // plotOptions: {
+            //     series: {
+            //         marker: {
+            //
+            //             fillColor: '#FFFFFF',
+            //             // fillColor: {
+            //             //     formatter: function () {
+            //             //         if (true) {
+            //             //             return 'red'
+            //             //         } else {
+            //             //             return 'green'
+            //             //         }
+            //             //     }
+            //             // },
+            //             lineWidth: 2,
+            //             // lineColor: 'red', // inherit from series
+            //             // lineColor: (this.y <= $scope.data.viability.p90 && this.y >= $scope.data.viability.p80) ? 'red' : 'blue'
+            //             // lineColor: {
+            //             //     formatter: function () {
+            //             //         if (true) {
+            //             //             return 'red';
+            //             //         } else {
+            //             //             return 'green;'
+            //             //         }
+            //             //     }
+            //             // }
+            //
+            //             // lineColor: (this.y <= $scope.data.viability.p90 && this.y >= $scope.data.viability.p80) ? 'red' : 'blue'
+            //             lineColor: {
+            //                 formatter: function () {
+            //                     console.log(this);
+            //                     // if (this.y > 50) {
+            //                     //     return 'red';
+            //                     // } else {
+            //                     //     return 'green;'
+            //                     // }
+            //                     return 'red';
+            //                 }
+            //             }
+            //         }
+            //     },
+            //     spline: {
+            //         marker: {
+            //             enabled: true
+            //         }
+            //     }
+            // },
+
+            series: [{
+                name: 'Viability',
+                // Define the data points. All series have a dummy year
+                // of 1970/71 in order to be compared on the same x axis. Note
+                // that in JavaScript, months start at 0 for January, 1 for February etc.
+                //data: [
+                //    [Date.UTC(2017, 0, 1), 60],
+                //    [Date.UTC(2030, 11, 29), 54],
+                //    [Date.UTC(2031, 9, 23), 53.33],
+                //    ...
+                //]
+                // 위와 같이 하시면 실제로는 아래와 같습니다.
+                // data: [[1483196400000,60],[1924700400000,54] ... ]
+                data: $scope.seed.scaled
+            }],
+            exporting: {
+                filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + formatDate(new Date)
+            }
+        });
+    }
+
+    function renderSeedChart2() {
         Highcharts.chart('container_seed', {
 
             credits : { enabled: false},
@@ -651,6 +1132,150 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
     }
 
     function renderOilChart() {
+
+        // console.log($scope.waterValue)
+
+        Highcharts.chart('container_oil', {
+
+            chart: {
+                height: 300,
+                type: 'line'
+            },
+            credits : { enabled: false},
+            title: {
+                text: 'Seed moisture isotherm(' + $scope.data.dryTemperature + '°C) ' + $scope.data.name2 + ' ' + $scope.data.name3  + '-' + formatDate(new Date)
+            },
+
+            subtitle: {
+                text: null
+            },
+
+            xAxis: {
+                // minPadding: 10,
+                // maxPadding: 10,
+                tickInterval: 10,
+                type: 'linear',
+                title: {
+                    text: '건조 상대습도'
+                },
+                categories: $scope.oilWaters.humidity,
+                // minorGridLineWidth: 0,
+                // minorTickLength: 0,
+
+                // plotLines: [{
+                //     color: 'green',
+                //     // dashStyle: 'shortdash',
+                //     width: 2,
+                //     value: 10
+                // }],
+
+                // plotBands: [{
+                //     color: '#FCFFC5',
+                //     from: 1,
+                //     to: 2
+                // }],
+                plotLines: [{
+                    color: '#FF0000',
+                    width: 2,
+                    value: 1,
+                    label: {
+                        text: 'default',
+                        verticalAlign: 'middle',
+                        textAlign: 'center',
+                    }
+                }],
+
+
+                // labels: {
+                //     step: 1
+                // }
+            },
+
+            yAxis: {
+                title: {
+                    text: '수분함량'
+                },
+                // plotLines: [{
+                //     value: $scope.data.resultWaterValue,
+                //     color: 'green',
+                //     dashStyle: 'shortdash',
+                //     width: 2,
+                //     label: {
+                //         text: '수분함량: ' + $scope.data.resultWaterValue,
+                //         align: 'center'
+                //     }
+                // }]
+            },
+            legend: {
+                enabled: false,
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            // tooltip: {
+            //     // crosshairs: [true,true],
+            //     crosshairs: [{
+            //         width: 1,
+            //         dashStyle: 'solid',
+            //         color: 'red'
+            //     }, {
+            //         width: 1,
+            //         dashStyle: 'solid',
+            //         color: 'red'
+            //     }],
+            // },
+            //
+            tooltip : {
+                formatter: function() {
+                    var tooltip;
+                    if (this.key == 'last') {
+                        tooltip = '<b>Final result is </b> ' + this.y;
+                    }
+                    else {
+                        tooltip =  '';
+                    }
+                    tooltip =  '<span style="color:' + this.series.color + '">' + '건조상대 습도' + '</span>: <b>' + this.x + '</b><br/>';
+                    tooltip = tooltip + '<span style="color:' + this.series.color + '">' + this.series.name + '</span>: <b>' + this.y + '</b><br/>'
+                    return tooltip;
+                },
+                crosshairs: [{
+                    width: 1,
+                    dashStyle: 'solid',
+                    color: 'red'
+                }, {
+                    width: 1,
+                    dashStyle: 'solid',
+                    color: 'red'
+                }],
+            },
+
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    // enableMouseTracking: false
+                }
+            },
+
+            // series: [{
+            //     name: '수분함량',
+            //     data: $scope.oilWaters.water
+            // }],
+            series: [{
+                name: '수분함량',
+                data: $scope.oilWaters.all
+            }
+            ],
+            exporting: {
+                filename: 'Seed moisture isotherm(' + $scope.data.dryTemperature + '°C) '  + $scope.data.name2 + ' ' + $scope.data.name3  + '-' + formatDate(new Date)
+            }
+
+        });
+    }
+
+    function renderOilChart2() {
 
         // console.log($scope.waterValue)
 
@@ -868,4 +1493,32 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
 
 
     }
+
+    $scope.exportJsonToCsv = function () {
+        for(var i=0; i < $scope.data.monitoringDateList.length; i++) {
+            $scope.data.monitoringDateList[i].index = i;
+            delete $scope.data.monitoringDateList[i].$$hashKey;
+        }
+        $scope.data.monitoringDateList.splice(Number($scope.selectedMonitoringData.monitoringCount) + 1, 7);
+        console.log($scope.data.monitoringDateList);
+
+        var json = $scope.data.monitoringDateList;
+        var fields = Object.keys(json[0]);
+        var replacer = function(key, value) { return value === null ? '' : value };
+        var csv = json.map(function(row){
+            return fields.map(function(fieldName){
+                return JSON.stringify(row[fieldName], replacer)
+            }).join(',');
+        });
+        csv.unshift(fields.join(',')); // add header column
+
+        console.log(csv.join('\r\n'));
+        csv = csv.join('\r\n');
+        var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
+        // filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + formatDate(new Date)
+        saveAs(blob, 'Monitoring_date' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + formatDate(new Date) + '.csv');
+    }
+
+
+
 })
