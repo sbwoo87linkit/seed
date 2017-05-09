@@ -5,9 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta charset="utf-8"/>
     <title>Monitoring Optimization Software  using Seed Viability Estimation</title>
-    <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css"/>
+    <link type="text/css" rel="stylesheet"
+          href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css"/>
     <link type="text/css" rel="stylesheet" href="lib/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="lib/css/font-awesome.min.css"/>
+    <link type="text/css" rel="stylesheet" href="lib/ui-select/ui-select.css"/>
     <!--<link type="text/css" rel="stylesheet" href="lib/autocomplete/autocomplete.css"/>-->
     <link href="style.css" rel="stylesheet"/>
     <!--[if lt IE 9]>
@@ -19,30 +21,40 @@
 <body ng-controller="MainController as mainVm" ng-cloak>
 
 <div class="container" style="height: 100%">
-    <div ng-show="!organization" class="intro">
-        <div class="center">
-
-            <form name="organizationForm">
-                <div class="form-group-lg">
-                    <label for="organizationName">Organization name</label>
-                    <input type="text" ng-model="organizationName" ng-minlength="3" class="form-control" id="organizationName" placeholder="Organization name">
+    <div ng-show="!organization">
+        <div class="alert alert-info text-center" role="alert" style="margin: 50px">
+            <strong style="font-size: 1.6em">Monitoring Optimization Software  using Seed Viability Estimation</strong>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="row">
+                    <div class="col-md-9">
+                        <form name="organizationForm">
+                            <div class="form-group-lg">
+                                <input type="text" ng-model="organizationName" ng-minlength="1" class="form-control"
+                                       id="organizationName" placeholder="Organization name">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block"
+                                ng-click="saveOrganization(organizationName)"
+                                ng-disabled="!organizationForm.organizationName.$valid && !organizationName">Save
+                        </button>
+                    </div>
                 </div>
-                <div class="form-group-lg text-right" style="padding-top: 10px">
-                    <button type="submit" class="btn btn-default"
-                            ng-click="saveOrganization(organizationName)"
-                            ng-disabled="!organizationForm.organizationName.$valid && !organizationName">Save</button>
-                </div>
-            </form>
-
-
+            </div>
         </div>
     </div>
 
     <div ng-show="organization" class="animationIf">
-        <h3 class="text-center">Monitoring Optimization Software  using Seed Viability Estimation</h3>
+        <div class="alert alert-info text-center" role="alert" style="margin: 50px">
+            <strong style="font-size: 1.6em">Monitoring Optimization Software  using Seed Viability Estimation</strong>
+        </div>
         <div class="text-right" style="margin: 10px 0">
             <span style="font-size: 1.6em; color: #9d9d9d">{{organization}} </span>
-            <button ng-click="deleteOrganization()" class="btn btn-xs" style="margin:0 0 12px 10px"><i class="fa fa-minus"></i></button>
+            <button ng-click="deleteOrganization()" class="btn btn-xs" style="margin:0 0 12px 10px"><i
+                    class="fa fa-minus"></i></button>
         </div>
 
         <div class="row">
@@ -53,114 +65,87 @@
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12">
 
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">Species</div>
+                                    <div class="panel-body">
 
+                                        <div class="row">
 
-                                <div class="row" style="margin-bottom: 5px;">
-                                    <div class="col-md-2 col-sm-2 col-xs-12">
-                                        <h5>species</h5>
+                                            <div class="col-md-4">
+                                                <h5>Family</h5>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="text" ng-model="data.name1"
+                                                               uib-typeahead="item for item in family | filter:$viewValue | limitTo:8"
+                                                               class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5>Genus</h5>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="text" ng-model="data.name2"
+                                                               uib-typeahead="item for item in genus | filter:$viewValue:startsWith | limitTo:8"
+                                                               typeahead-select-on-exact="true"
+                                                               typeahead-show-hint="true"
+                                                               typeahead-min-length="0"
+                                                               class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5>Epithet</h5>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="text" ng-model="data.name3" placeholder="Epithet"
+                                                               class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+                                                <h5></h5>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5>Variance</h5>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <select class="form-control" ng-model="data.name4"
+                                                                ng-options="key as value for (key , value) in varNames"
+                                                                ng-change="varNameChanged()"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <h5>변종소명</h5>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="text" ng-model="data.name5" placeholder="변종소명"
+                                                               class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-
-
-
-
-                                <!--<div class="row">-->
-                                <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
-                                <!--<input type="text" ng-model="data.name1" placeholder="Family"-->
-                                <!--class="form-control">-->
-                                <!--</div>-->
-                                <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
-                                <!--<input type="text" ng-model="data.name2" placeholder="Genus" class="form-control">-->
-                                <!--</div>-->
-                                <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
-                                <!--<input type="text" ng-model="data.name3" placeholder="Epithet"-->
-                                <!--class="form-control">-->
-                                <!--</div>-->
-                                <!--<div class="col-md-3 col-sm-3 col-xs-12 form-group">-->
-                                <!--<select class="form-control" ng-model="data.name4"-->
-                                <!--ng-options="key as value for (key , value) in varNames"-->
-                                <!--ng-change="varNameChanged()"></select>-->
-                                <!--</div>-->
-                                <!--<div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="data.name4">-->
-                                <!--<input type="text" ng-model="data.name5" placeholder="변종소명"-->
-                                <!--class="form-control">-->
-                                <!--</div>-->
-                                <!--</div>-->
-
-
-
-
-
-
-
-
-                                <div class="row">
-                                    <div class="col-md-2 col-sm-2 col-xs-12 form-group">
-                                        <input auto-complete ui-items="family" type="text" ng-model="data.name1" placeholder="Family"
-                                               class="form-control">
-                                    </div>
-                                    <div class="col-md-2 col-sm-2 col-xs-12 form-group">
-                                        <input auto-complete ui-items="genus" type="text" ng-model="data.name2" placeholder="Genus" class="form-control">
-                                    </div>
-                                    <div class="col-md-2 col-sm-2 col-xs-12 form-group">
-                                        <input type="text" ng-model="data.name3" placeholder="Epithet"
-                                               class="form-control">
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                        <select class="form-control" ng-model="data.name4"
-                                                ng-options="key as value for (key , value) in varNames"
-                                                ng-change="varNameChanged()"></select>
-                                    </div>
-                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="data.name4">
-                                        <input type="text" ng-model="data.name5" placeholder="변종소명"
-                                               class="form-control">
-                                    </div>
-                                </div>
-                                <div>
-                                    Entandrophragma  ,   angolense
-                                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                               </div>
                             </div>
+
                         </div>
-
-
-
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col-md-12 text-right">
-                                <button class="btn btn-success" ng-click="findSeed()">Find</button>
-                            </div>
-                        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         <div>
                             <hr>
@@ -168,16 +153,17 @@
 
 
                         <div class="row">
-                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                <h5>moisture content</h5>
+                            <div class="col-md-4">
+                                <h5>Moisture content</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                        <input type="text" ng-model="data.waterValue" placeholder="" class="form-control">
+                                        <input type="text" ng-model="data.waterValue" placeholder=""
+                                               class="form-control">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                <h5>storage temp. (°C)</h5>
+                            <div class="col-md-4">
+                                <h5>Storage temp. (°C)</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" ng-model="data.inventoryCondition" placeholder=""
@@ -187,8 +173,8 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 col-sm-4 col-xs-12">
-                                <h5>date</h5>
+                            <div class="col-md-4">
+                                <h5>Date</h5>
                                 <div class="row">
                                     <div class="span5 col-md-12" id="sandbox-container">
                                         <input type="text" class="form-control" data-date-format="yyyy.mm.dd"
@@ -196,8 +182,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                <h5>weight</h5>
+                            <div class="col-md-2">
+                                <h5>Weight</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" placeholder="" class="form-control" ng-model="data.weight"
@@ -205,7 +191,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2 col-sm-2 col-xs-12">
+                            <div class="col-md-3">
                                 <h5>1000 seed weight</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
@@ -214,8 +200,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-1 col-sm-offset-1">
-                                <h5>seed quantity</h5>
+                            <div class="col-md-3">
+                                <h5>Seed quantity</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" placeholder="" class="form-control" readonly
@@ -226,7 +212,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 col-sm-2 col-xs-12">
-                                <h5>viability</h5>
+                                <h5>Viability</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" placeholder="" class="form-control"
@@ -254,7 +240,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-4 col-sm-4 col-xs-12">
-                                <h5>oil content</h5>
+                                <h5>Oil content</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" placeholder="" class="form-control"
@@ -275,7 +261,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-4 col-sm-4 col-xs-12">
-                                <h5>drying temp.(°C)</h5>
+                                <h5>Drying temp.(°C)</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" placeholder="" class="form-control"
@@ -284,7 +270,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4 col-xs-12">
-                                <h5>equilibrium RH(%)</h5>
+                                <h5>Equilibrium RH(%)</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" placeholder="" class="form-control"
@@ -293,7 +279,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-4 col-xs-12">
-                                <h5>moisture content(%)</h5>
+                                <h5>Moisture content(%)</h5>
                                 <div class="row">
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <input type="text" placeholder="" class="form-control" readonly
@@ -309,9 +295,6 @@
                             </button>
                         </div>
 
-                        <!--<div ng-show="oilWaters" style="width: 300px">-->
-                        <!--<hr>-->
-                        <!--</div>-->
                         <hr ng-show="oilWaters">
                         <div id="container_oil"></div>
 
@@ -329,11 +312,10 @@
                         <div class="row">
                             <div class="col-md-9 col-sm-9 col-xs-12">
                                 <h4>Seed viability constant : <span
-                                        style="font-size: 0.9em; padding: 0px 10px; margin-left: 10px">{{seedName}}</span></h4>
+                                        style="font-size: 0.9em; padding: 0px 10px; margin-left: 10px">{{seedName}}</span>
+                                </h4>
                                 <div class="row">
                                     <div class="col-md-6 text-center">
-                                        <!--<div class="col-md-10 col-sm-10 col-xs-12 form-group">-->
-                                        <!--</div>-->
                                         <select ng-model="mySeed" class="form-control"
                                                 ng-options="seed.name for seed in seedData">
                                             <option value="">-- select --</option>
@@ -377,15 +359,18 @@
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>P90 (Day)</label>
-                                        <input type="text" ng-model="data.p90Day" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p90Day" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>P85 (Day)</label>
-                                        <input type="text" ng-model="data.p85Day" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p85Day" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>P80 (Day)</label>
-                                        <input type="text" ng-model="data.p80Day" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p80Day" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -396,36 +381,43 @@
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>P90 (Year)</label>
-                                        <input type="text" ng-model="data.p90Year" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p90Year" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>P85 (Year)</label>
-                                        <input type="text" ng-model="data.p85Year" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p85Year" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>P80 (Year)</label>
-                                        <input type="text" ng-model="data.p80Year" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p80Year" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                    <div class="col-md-6 form-group">
                                         <label>P90-P85</label>
-                                        <input type="text" ng-model="data.p90_P85" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p90_P85" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
-                                    <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                    <div class="col-md-6 form-group">
                                         <label>P85-P80</label>
-                                        <input type="text" ng-model="data.p85_P80" placeholder="" class="form-control" readonly>
+                                        <input type="text" ng-model="data.p85_P80" placeholder="" class="form-control"
+                                               readonly>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>monitoring period(day)</label>
-                                        <input type="text" ng-model="data.monitoringDay" placeholder="" class="form-control"
+                                        <input type="text" ng-model="data.monitoringDay" placeholder=""
+                                               class="form-control"
                                                readonly>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
                                         <label>test seed count </label>
-                                        <input type="text" ng-model="data.testLipCount" placeholder="" class="form-control"
+                                        <input type="text" ng-model="data.testLipCount" placeholder=""
+                                               class="form-control"
                                                readonly>
                                     </div>
                                     <div class="col-md-3 col-sm-3 col-xs-12 form-group">
@@ -433,7 +425,20 @@
                                         <input type="text" ng-model="data.monitoringCondition" placeholder=""
                                                class="form-control" readonly>
                                     </div>
+
+
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-3 col-md-offset-9">
+                                        <button class="btn btn-success btn-block btn-lg" type="button"
+                                                ng-click="calculate()">
+                                            Calculate
+                                        </button>
+                                    </div>
+                                </div>
+
+
                                 <div class="row">
                                     <div class="col-md-12" style="margin-top: 30px;">
                                         <div id="container_seed"></div>
@@ -446,11 +451,10 @@
                                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                         <label>monitoring table</label>
                                         <div class="pull-right">
-                                            <button class="btn btn-success btn-xs" ng-click="exportJsonToCsv()">CSV export
+                                            <button class="btn btn-success btn-xs" ng-click="exportJsonToCsv()">CSV
+                                                export
                                             </button>
                                         </div>
-                                        <!--<textarea type="text" ng-model="data.monitoringDate" placeholder="" class="form-control" style="height:250px;"-->
-                                        <!--readonly></textarea>-->
                                         <table class="table">
                                             <tr>
                                                 <th>#</th>
@@ -471,15 +475,7 @@
                             </div>
                         </div>
 
-
-                        <!--<div class="row text-right">-->
-                        <!--<div class="col-md-10"></div>-->
-                        <!--<div class="col-md-2">-->
-                        <!--<button class="btn btn-success btn-block btn-lg" type="button" ng-click="save()">Save</button>-->
-                        <!--</div>-->
-                        <!--</div>-->
-
-                        <div class="row">
+                        <div ng-show="seed.scaled" class="row">
 
                             <hr>
                             <div class="col-md-6 col-md-offset-3">
@@ -507,34 +503,32 @@
                                                 <input type="text" class="form-control" ng-model="keyword"
                                                        placeholder="add keyword">
                                                 <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button" ng-click="addKeyword(keyword)">
+                                            <button class="btn btn-default" type="button"
+                                                    ng-click="addKeyword(keyword)">
                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                             </button>
                                         </span>
                                             </div>
-                                            <!--<input type="text">-->
                                         </div>
                                         <div class="col-md-5">
                                             <h4 class="text-muted">Search site</h4>
-                                            <!--<hr>-->
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" ng-model="site.name" value="Google Scholar Search">
-                                                    <!--<input type="radio" name="optionsRadios" value="option1" checked>-->
+                                                    <input type="radio" ng-model="site.name"
+                                                           value="Google Scholar Search">
                                                     Google Scholar Search
                                                 </label>
                                             </div>
                                             <div class="radio">
                                                 <label>
                                                     <input type="radio" ng-model="site.name" value="Google Search">
-                                                    <!--<input type="radio" name="optionsRadios" value="option1">-->
                                                     Google Search
                                                 </label>
                                             </div>
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" ng-model="site.name" value="Google Image Search">
-                                                    <!--<input type="radio" name="optionsRadios" value="option1">-->
+                                                    <input type="radio" ng-model="site.name"
+                                                           value="Google Image Search">
                                                     Google Image Search
                                                 </label>
                                             </div>
@@ -563,8 +557,6 @@
 
 
 
-<!--</div>-->
-
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -589,32 +581,32 @@
 <script src="lib/js/jquery-latest.js"></script>
 <script src="lib/js/jquery-migrate-1.2.1.min.js"></script>
 <script src="lib/js/jquery-ui-latest.js"></script>
-<!--<script src="lib/js/jquery-ui-1.10.3.custom.js"></script>-->
-<!-- <script src="lib/js/jquery.mjs.nestedSortable.js"></script> -->
-<!--<script type="text/javascript"-->
-<!--src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>-->
-<!--<script src="lib/js/pivot.js"></script>-->
-
-
 <script src="lib/js/d3.v3.min.js"></script>
-
-
-
-<!--<script src="lib/js/gchart_renderers.js"></script>-->
 <script src="lib/js/bootstrap.min.js"></script>
-<script src="lib/js/angular.js"></script>
-<script src="lib/js/angular-animate.js"></script>
 
-<!--<script src="lib/autocomplete/autocomplete.js"></script>-->
-<!--<script src="lib/js/angular.rangeSlider.js"></script>-->
-<!--<script src="lib/js/typedarray.js"></script>-->
+
+<!--<script src="lib/js/angular.js"></script>-->
+<!--<script src="lib/js/angular-sanitizer.js"></script>-->
+<!--<script src="lib/js/angular-animate.js"></script>-->
+
+
+
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
+
+
+
+
+
+
+
+<!--<script src="lib/ui-select/ui-select.js"></script>-->
+
 <script src="lib/js/Blob.js"></script>
 <script src="lib/js/FileSaver.js"></script>
-<!--<script src="lib/angular-loading-bar/loading-bar.js"></script>-->
 <script src="lib/js/bootstrap-datepicker.min.js"></script>
-
-<!--<script src="https://code.highcharts.com/highcharts.js"></script>-->
-<!--<script src="https://code.highcharts.com/modules/exporting.js"></script>-->
 <script src="lib/highcharts/highcharts.js"></script>
 <script src="lib/highcharts/exporting.js"></script>
 <script src="lib/highcharts/export-csv.js"></script>
