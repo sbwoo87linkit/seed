@@ -59,15 +59,38 @@ h5 {
     margin-top: 0;
 }
 
-
-
-
 .ui-autocomplete {
-    background: #eee;
+    background: #fff;
     height: 200px;
     overflow: scroll;
+    border: 1px solid #c3c3c3;
+    box-shadow: 0 0 8px 0px #d4d4d4;
 }
 
 .checkbox, .radio {
     /*margin-bottom: 0px !important;*/
+}
+
+
+/**
+Intro screen
+ */
+
+.intro {
+    height:100%;
+    /*background: green;*/
+    /*width: 300px;*/
+    border : 1px solid #9d9d9d;
+    border-radius: 20px !important;
+    box-shadow: 0 0 8px 0px #d4d4d4;
+
+}
+
+.center {
+    width: 300px;
+    position: relative;
+    float: left;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }

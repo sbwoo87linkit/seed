@@ -5,9 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta charset="utf-8"/>
     <title>Monitoring Optimization Software  using Seed Viability Estimation</title>
-
-
-
     <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css"/>
     <link type="text/css" rel="stylesheet" href="lib/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="lib/css/font-awesome.min.css"/>
@@ -21,522 +18,550 @@
 
 <body ng-controller="MainController as mainVm" ng-cloak>
 
-<!--<div class="container">-->
+<div class="container" style="height: 100%">
+    <div ng-show="!organization" class="intro">
+        <div class="center">
 
-<h2 class="text-center">Monitoring Optimization Software  using Seed Viability Estimation</h2>
-<br>
-
-<div class="row">
-    <div class="col-md-8">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Seed Information</h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-
-
-
-                        <div class="row" style="margin-bottom: 5px;">
-                            <div class="col-md-2 col-sm-2 col-xs-12">
-                                <h5>species</h5>
-                            </div>
-                        </div>
+            <form name="organizationForm">
+                <div class="form-group-lg">
+                    <label for="organizationName">Organization name</label>
+                    <input type="text" ng-model="organizationName" ng-minlength="3" class="form-control" id="organizationName" placeholder="Organization name">
+                </div>
+                <div class="form-group-lg text-right" style="padding-top: 10px">
+                    <button type="submit" class="btn btn-default"
+                            ng-click="saveOrganization(organizationName)"
+                            ng-disabled="!organizationForm.organizationName.$valid && !organizationName">Save</button>
+                </div>
+            </form>
 
 
+        </div>
+    </div>
+
+    <div ng-show="organization" class="animationIf">
+        <h3 class="text-center">Monitoring Optimization Software  using Seed Viability Estimation</h3>
+        <div class="text-right" style="margin: 10px 0">
+            <span style="font-size: 1.6em; color: #9d9d9d">{{organization}} </span>
+            <button ng-click="deleteOrganization()" class="btn btn-xs" style="margin:0 0 12px 10px"><i class="fa fa-minus"></i></button>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Seed Information</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
 
 
-                        <!--<div class="row">-->
-                            <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
+
+                                <div class="row" style="margin-bottom: 5px;">
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                        <h5>species</h5>
+                                    </div>
+                                </div>
+
+
+
+
+                                <!--<div class="row">-->
+                                <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
                                 <!--<input type="text" ng-model="data.name1" placeholder="Family"-->
-                                       <!--class="form-control">-->
-                            <!--</div>-->
-                            <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
-                                <!--<input type="text" ng-model="data.name2" placeholder="Genus" class="form-control">-->
-                            <!--</div>-->
-                            <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
-                                <!--<input type="text" ng-model="data.name3" placeholder="Epithet"-->
-                                       <!--class="form-control">-->
-                            <!--</div>-->
-                            <!--<div class="col-md-3 col-sm-3 col-xs-12 form-group">-->
-                                <!--<select class="form-control" ng-model="data.name4"-->
-                                        <!--ng-options="key as value for (key , value) in varNames"-->
-                                        <!--ng-change="varNameChanged()"></select>-->
-                            <!--</div>-->
-                            <!--<div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="data.name4">-->
-                                <!--<input type="text" ng-model="data.name5" placeholder="변종소명"-->
-                                       <!--class="form-control">-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-
-
-
-
-
-
-
-                        <div class="row">
-                            <div class="col-md-2 col-sm-2 col-xs-12 form-group">
-                                <input auto-complete ui-items="family" type="text" ng-model="data.name1" placeholder="Family"
-                                       class="form-control">
-                            </div>
-                            <div class="col-md-2 col-sm-2 col-xs-12 form-group">
-                                <input auto-complete ui-items="genus" type="text" ng-model="data.name2" placeholder="Genus" class="form-control">
-                            </div>
-                            <div class="col-md-2 col-sm-2 col-xs-12 form-group">
-                                <input type="text" ng-model="data.name3" placeholder="Epithet"
-                                       class="form-control">
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <select class="form-control" ng-model="data.name4"
-                                        ng-options="key as value for (key , value) in varNames"
-                                        ng-change="varNameChanged()"></select>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="data.name4">
-                                <input type="text" ng-model="data.name5" placeholder="변종소명"
-                                       class="form-control">
-                            </div>
-                        </div>
-                        <div>
-                            Entandrophragma  ,   angolense
-                        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-                </div>
-
-
-
-                <div class="row" style="margin-top: 10px;">
-                    <div class="col-md-12 text-right">
-                        <button class="btn btn-success" ng-click="findSeed()">Find</button>
-                    </div>
-                </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <div>
-                    <hr>
-                </div>
-
-
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <h5>moisture content</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" ng-model="data.waterValue" placeholder="" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <h5>storage temp. (°C)</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" ng-model="data.inventoryCondition" placeholder=""
-                                       class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <h5>date</h5>
-                        <div class="row">
-                            <div class="span5 col-md-12" id="sandbox-container">
-                                <input type="text" class="form-control" data-date-format="yyyy.mm.dd"
-                                       ng-model="data.inventoryDate">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <h5>weight</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control" ng-model="data.weight"
-                                       ng-blur="calculateLipCount()">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <h5>1000 seed weight</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control"
-                                       ng-model="data.kiloLipWeight" ng-blur="calculateLipCount()">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-1 col-sm-offset-1">
-                        <h5>seed quantity</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control" readonly
-                                       ng-model="data.lipCount">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 col-sm-2 col-xs-12">
-                        <h5>viability</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control"
-                                       ng-model="data.inventoryPower">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row text-right">
-                    <div class="col-md-9"></div>
-                    <div class="col-md-3">
-                        <button class="btn btn-success btn-block btn-lg" type="button" ng-click="calculate()">
-                            Calculate
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Estimating seed equilibrium</h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <h5>oil content</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control"
-                                       ng-model="data.groundValue">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-8 col-sm-8 col-xs-12">
-                        <h5>Ref.&nbsp;</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <select class="form-control" ng-model='data.groundValue'
-                                        ng-options='item.oil as item.name for item in oilData'>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <h5>drying temp.(°C)</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control"
-                                       ng-model="data.dryTemperature">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <h5>equilibrium RH(%)</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control"
-                                       ng-model="data.dryHumidity">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 col-xs-12">
-                        <h5>moisture content(%)</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" placeholder="" class="form-control" readonly
-                                       ng-model="data.resultWaterValue">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-right">
-
-                    <button class="btn btn-success" style="margin-top: 5px" type="button"
-                            ng-click="calculateWaterValue()">Calculate
-                    </button>
-                </div>
-
-                <!--<div ng-show="oilWaters" style="width: 300px">-->
-                <!--<hr>-->
-                <!--</div>-->
-                <hr ng-show="oilWaters">
-                <div id="container_oil"></div>
-
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Results</h3>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-9 col-sm-9 col-xs-12">
-                        <h4>seed viability constant : <span
-                                style="font-size: 0.9em; padding: 0px 10px; margin-left: 10px">{{seedName}}</span></h4>
-                        <div class="row">
-                            <div class="col-md-6 text-center">
-                                <!--<div class="col-md-10 col-sm-10 col-xs-12 form-group">-->
+                                <!--class="form-control">-->
                                 <!--</div>-->
-                                <select ng-model="mySeed" class="form-control"
-                                        ng-options="seed.name for seed in seedData">
-                                    <option value="">-- select --</option>
-                                </select>
+                                <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
+                                <!--<input type="text" ng-model="data.name2" placeholder="Genus" class="form-control">-->
+                                <!--</div>-->
+                                <!--<div class="col-md-2 col-sm-2 col-xs-12 form-group">-->
+                                <!--<input type="text" ng-model="data.name3" placeholder="Epithet"-->
+                                <!--class="form-control">-->
+                                <!--</div>-->
+                                <!--<div class="col-md-3 col-sm-3 col-xs-12 form-group">-->
+                                <!--<select class="form-control" ng-model="data.name4"-->
+                                <!--ng-options="key as value for (key , value) in varNames"-->
+                                <!--ng-change="varNameChanged()"></select>-->
+                                <!--</div>-->
+                                <!--<div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="data.name4">-->
+                                <!--<input type="text" ng-model="data.name5" placeholder="변종소명"-->
+                                <!--class="form-control">-->
+                                <!--</div>-->
+                                <!--</div>-->
+
+
+
+
+
+
+
+
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                        <input auto-complete ui-items="family" type="text" ng-model="data.name1" placeholder="Family"
+                                               class="form-control">
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                        <input auto-complete ui-items="genus" type="text" ng-model="data.name2" placeholder="Genus" class="form-control">
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-12 form-group">
+                                        <input type="text" ng-model="data.name3" placeholder="Epithet"
+                                               class="form-control">
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <select class="form-control" ng-model="data.name4"
+                                                ng-options="key as value for (key , value) in varNames"
+                                                ng-change="varNameChanged()"></select>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group" ng-if="data.name4">
+                                        <input type="text" ng-model="data.name5" placeholder="변종소명"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                                <div>
+                                    Entandrophragma  ,   angolense
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                             </div>
-                            <div class="col-md-6 text-right">
-                                <button class="btn btn-info btn-sm" ng-click="data.Ch=0.0329; data.Cq=0.000478">
-                                    Apply universal constant value for Ch and Cq
+                        </div>
+
+
+
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-md-12 text-right">
+                                <button class="btn btn-success" ng-click="findSeed()">Find</button>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <div>
+                            <hr>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <h5>moisture content</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" ng-model="data.waterValue" placeholder="" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <h5>storage temp. (°C)</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" ng-model="data.inventoryCondition" placeholder=""
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <h5>date</h5>
+                                <div class="row">
+                                    <div class="span5 col-md-12" id="sandbox-container">
+                                        <input type="text" class="form-control" data-date-format="yyyy.mm.dd"
+                                               ng-model="data.inventoryDate">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <h5>weight</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control" ng-model="data.weight"
+                                               ng-blur="calculateLipCount()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <h5>1000 seed weight</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control"
+                                               ng-model="data.kiloLipWeight" ng-blur="calculateLipCount()">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12 col-md-offset-1 col-sm-offset-1">
+                                <h5>seed quantity</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control" readonly
+                                               ng-model="data.lipCount">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                <h5>viability</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control"
+                                               ng-model="data.inventoryPower">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-right">
+                            <div class="col-md-9"></div>
+                            <div class="col-md-3">
+                                <button class="btn btn-success btn-block btn-lg" type="button" ng-click="calculate()">
+                                    Calculate
                                 </button>
                             </div>
                         </div>
-                        <div class="row">
-
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>Ke</label>
-                                <input type="text" ng-model="data.Ke" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>Cw</label>
-                                <input type="text" ng-model="data.Cw" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>Ch</label>
-                                <input type="text" ng-model="data.Ch" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>Cq</label>
-                                <input type="text" ng-model="data.Cq" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>Sigma (Day)</label>
-                                <input type="text" ng-model="data.sigmaDay" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>P90 (Day)</label>
-                                <input type="text" ng-model="data.p90Day" placeholder="" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>P85 (Day)</label>
-                                <input type="text" ng-model="data.p85Day" placeholder="" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>P80 (Day)</label>
-                                <input type="text" ng-model="data.p80Day" placeholder="" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>Sigma (Year)</label>
-                                <input type="text" ng-model="data.sigmaYear" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>P90 (Year)</label>
-                                <input type="text" ng-model="data.p90Year" placeholder="" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>P85 (Year)</label>
-                                <input type="text" ng-model="data.p85Year" placeholder="" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>P80 (Year)</label>
-                                <input type="text" ng-model="data.p80Year" placeholder="" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-4 col-xs-12 form-group">
-                                <label>P90-P85</label>
-                                <input type="text" ng-model="data.p90_P85" placeholder="" class="form-control" readonly>
-                            </div>
-                            <div class="col-md-4 col-sm-4 col-xs-12 form-group">
-                                <label>P85-P80</label>
-                                <input type="text" ng-model="data.p85_P80" placeholder="" class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>monitoring period(day)</label>
-                                <input type="text" ng-model="data.monitoringDay" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>test seed count </label>
-                                <input type="text" ng-model="data.testLipCount" placeholder="" class="form-control"
-                                       readonly>
-                            </div>
-                            <div class="col-md-3 col-sm-3 col-xs-12 form-group">
-                                <label>monitoring condition</label>
-                                <input type="text" ng-model="data.monitoringCondition" placeholder=""
-                                       class="form-control" readonly>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12" style="margin-top: 30px;">
-                                <div id="container_seed"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 col-xs-12">
-                        <h5>&nbsp;</h5>
-                        <div class="row">
-                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <label>monitoring table</label>
-                                <div class="pull-right">
-                                    <button class="btn btn-success btn-xs" ng-click="exportJsonToCsv()">CSV export
-                                    </button>
-                                </div>
-                                <!--<textarea type="text" ng-model="data.monitoringDate" placeholder="" class="form-control" style="height:250px;"-->
-                                <!--readonly></textarea>-->
-                                <table class="table">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>date</th>
-                                        <th>viability(% est.)</th>
-                                        <th>%</th>
-                                    </tr>
-                                    <tr ng-if="$index <= (selectedMonitoringData.monitoringCount)"
-                                        ng-repeat="item in data.monitoringDateList">
-                                        <td>{{$index}}</td>
-                                        <td>{{item.date}}</td>
-                                        <td>{{item.power | number:2}}</td>
-                                        <td>{{item.percent | number:1}}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
                     </div>
                 </div>
-
-
-                <!--<div class="row text-right">-->
-                <!--<div class="col-md-10"></div>-->
-                <!--<div class="col-md-2">-->
-                <!--<button class="btn btn-success btn-block btn-lg" type="button" ng-click="save()">Save</button>-->
-                <!--</div>-->
-                <!--</div>-->
-
-                <div class="row">
-
-                    <hr>
-                    <div class="col-md-6 col-md-offset-3">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Search</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-md-5">
-                                    <h4 class="text-muted">Keywords</h4>
-                                    <!--<hr>-->
-                                    <div class="checkbox" ng-repeat="keyword in keywords track by $index">
-                                        <label>
-                                            <input
-                                                    type="checkbox"
-                                                    name="selectedKeywords[]"
-                                                    value="{{keyword}}"
-                                                    ng-checked="selection.indexOf(keyword) > -1"
-                                                    ng-click="toggleSelection(keyword)"
-                                                    ng-disabled="$index == 0"
-                                            > {{keyword}}
-                                        </label>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Estimating seed equilibrium</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <h5>oil content</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control"
+                                               ng-model="data.groundValue">
                                     </div>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" ng-model="keyword"
-                                               placeholder="add keyword">
-                                        <span class="input-group-btn">
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <h5>Ref.&nbsp;</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <select class="form-control" ng-model='data.groundValue'
+                                                ng-options='item.oil as item.name for item in oilData'>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <h5>drying temp.(°C)</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control"
+                                               ng-model="data.dryTemperature">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <h5>equilibrium RH(%)</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control"
+                                               ng-model="data.dryHumidity">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                <h5>moisture content(%)</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <input type="text" placeholder="" class="form-control" readonly
+                                               ng-model="data.resultWaterValue">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+
+                            <button class="btn btn-success" style="margin-top: 5px" type="button"
+                                    ng-click="calculateWaterValue()">Calculate
+                            </button>
+                        </div>
+
+                        <!--<div ng-show="oilWaters" style="width: 300px">-->
+                        <!--<hr>-->
+                        <!--</div>-->
+                        <hr ng-show="oilWaters">
+                        <div id="container_oil"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Results</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                <h4>Seed viability constant : <span
+                                        style="font-size: 0.9em; padding: 0px 10px; margin-left: 10px">{{seedName}}</span></h4>
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <!--<div class="col-md-10 col-sm-10 col-xs-12 form-group">-->
+                                        <!--</div>-->
+                                        <select ng-model="mySeed" class="form-control"
+                                                ng-options="seed.name for seed in seedData">
+                                            <option value="">-- select --</option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button class="btn btn-info btn-sm" ng-click="data.Ch=0.0329; data.Cq=0.000478">
+                                            Apply universal constant value for Ch and Cq
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>Ke</label>
+                                        <input type="text" ng-model="data.Ke" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>Cw</label>
+                                        <input type="text" ng-model="data.Cw" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>Ch</label>
+                                        <input type="text" ng-model="data.Ch" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>Cq</label>
+                                        <input type="text" ng-model="data.Cq" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>Sigma (Day)</label>
+                                        <input type="text" ng-model="data.sigmaDay" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>P90 (Day)</label>
+                                        <input type="text" ng-model="data.p90Day" placeholder="" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>P85 (Day)</label>
+                                        <input type="text" ng-model="data.p85Day" placeholder="" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>P80 (Day)</label>
+                                        <input type="text" ng-model="data.p80Day" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>Sigma (Year)</label>
+                                        <input type="text" ng-model="data.sigmaYear" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>P90 (Year)</label>
+                                        <input type="text" ng-model="data.p90Year" placeholder="" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>P85 (Year)</label>
+                                        <input type="text" ng-model="data.p85Year" placeholder="" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>P80 (Year)</label>
+                                        <input type="text" ng-model="data.p80Year" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                        <label>P90-P85</label>
+                                        <input type="text" ng-model="data.p90_P85" placeholder="" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-12 form-group">
+                                        <label>P85-P80</label>
+                                        <input type="text" ng-model="data.p85_P80" placeholder="" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>monitoring period(day)</label>
+                                        <input type="text" ng-model="data.monitoringDay" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>test seed count </label>
+                                        <input type="text" ng-model="data.testLipCount" placeholder="" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <label>monitoring condition</label>
+                                        <input type="text" ng-model="data.monitoringCondition" placeholder=""
+                                               class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top: 30px;">
+                                        <div id="container_seed"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                <h5>&nbsp;</h5>
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                        <label>monitoring table</label>
+                                        <div class="pull-right">
+                                            <button class="btn btn-success btn-xs" ng-click="exportJsonToCsv()">CSV export
+                                            </button>
+                                        </div>
+                                        <!--<textarea type="text" ng-model="data.monitoringDate" placeholder="" class="form-control" style="height:250px;"-->
+                                        <!--readonly></textarea>-->
+                                        <table class="table">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>date</th>
+                                                <th>viability(% est.)</th>
+                                                <th>%</th>
+                                            </tr>
+                                            <tr ng-if="$index <= (selectedMonitoringData.monitoringCount)"
+                                                ng-repeat="item in data.monitoringDateList">
+                                                <td>{{$index}}</td>
+                                                <td>{{item.date}}</td>
+                                                <td>{{item.power | number:2}}</td>
+                                                <td>{{item.percent | number:1}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--<div class="row text-right">-->
+                        <!--<div class="col-md-10"></div>-->
+                        <!--<div class="col-md-2">-->
+                        <!--<button class="btn btn-success btn-block btn-lg" type="button" ng-click="save()">Save</button>-->
+                        <!--</div>-->
+                        <!--</div>-->
+
+                        <div class="row">
+
+                            <hr>
+                            <div class="col-md-6 col-md-offset-3">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">Search</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="col-md-5">
+                                            <h4 class="text-muted">Keywords</h4>
+                                            <!--<hr>-->
+                                            <div class="checkbox" ng-repeat="keyword in keywords track by $index">
+                                                <label>
+                                                    <input
+                                                            type="checkbox"
+                                                            name="selectedKeywords[]"
+                                                            value="{{keyword}}"
+                                                            ng-checked="selection.indexOf(keyword) > -1"
+                                                            ng-click="toggleSelection(keyword)"
+                                                            ng-disabled="$index == 0"
+                                                    > {{keyword}}
+                                                </label>
+                                            </div>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" ng-model="keyword"
+                                                       placeholder="add keyword">
+                                                <span class="input-group-btn">
                                             <button class="btn btn-default" type="button" ng-click="addKeyword(keyword)">
                                                 <i class="fa fa-plus" aria-hidden="true"></i>
                                             </button>
                                         </span>
+                                            </div>
+                                            <!--<input type="text">-->
+                                        </div>
+                                        <div class="col-md-5">
+                                            <h4 class="text-muted">Search site</h4>
+                                            <!--<hr>-->
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" ng-model="site.name" value="Google Scholar Search">
+                                                    <!--<input type="radio" name="optionsRadios" value="option1" checked>-->
+                                                    Google Scholar Search
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" ng-model="site.name" value="Google Search">
+                                                    <!--<input type="radio" name="optionsRadios" value="option1">-->
+                                                    Google Search
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" ng-model="site.name" value="Google Image Search">
+                                                    <!--<input type="radio" name="optionsRadios" value="option1">-->
+                                                    Google Image Search
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-success"
+                                                    style="margin-top: 0px;"
+                                                    ng-click="search()">Search
+                                            </button>
+                                        </div>
                                     </div>
-                                    <!--<input type="text">-->
-                                </div>
-                                <div class="col-md-5">
-                                    <h4 class="text-muted">Search site</h4>
-                                    <!--<hr>-->
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" ng-model="site.name" value="Google Scholar Search">
-                                            <!--<input type="radio" name="optionsRadios" value="option1" checked>-->
-                                            Google Scholar Search
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" ng-model="site.name" value="Google Search">
-                                            <!--<input type="radio" name="optionsRadios" value="option1">-->
-                                            Google Search
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" ng-model="site.name" value="Google Image Search">
-                                            <!--<input type="radio" name="optionsRadios" value="option1">-->
-                                            Google Image Search
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-success"
-                                            style="margin-top: 0px;"
-                                            ng-click="search()">Search
-                                    </button>
                                 </div>
                             </div>
+
                         </div>
+
+
                     </div>
-
                 </div>
-
-
             </div>
         </div>
+
+
     </div>
 </div>
+
+
 
 <!--</div>-->
 
@@ -578,6 +603,8 @@
 <!--<script src="lib/js/gchart_renderers.js"></script>-->
 <script src="lib/js/bootstrap.min.js"></script>
 <script src="lib/js/angular.js"></script>
+<script src="lib/js/angular-animate.js"></script>
+
 <!--<script src="lib/autocomplete/autocomplete.js"></script>-->
 <!--<script src="lib/js/angular.rangeSlider.js"></script>-->
 <!--<script src="lib/js/typedarray.js"></script>-->

@@ -1,4 +1,4 @@
-var app = angular.module('myApp', []);
+var app = angular.module('myApp', ['ngAnimate']);
 
 app.directive('autoComplete', function($timeout) {
     return function(scope, iElement, iAttrs) {
@@ -13,7 +13,26 @@ app.directive('autoComplete', function($timeout) {
     };
 });
 
-app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log, $timeout) {
+app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log, $timeout, $window) {
+
+    $scope.app = {}
+
+    $scope.organization = $window.localStorage.getItem('organization');
+    // console.log($scope.organization)
+    // if ($scope.organization) {
+    //     $scope.isRegistered = true;
+    // }
+
+    $scope.saveOrganization = function (newOrganization) {
+        $window.localStorage.setItem('organization', newOrganization);
+        $scope.organization = newOrganization;
+    }
+
+
+    $scope.deleteOrganization = function () {
+        $window.localStorage.removeItem('organization')
+        $scope.organization = null;
+    }
 
 
     $scope.names = ["alfred", "john", "bill", "charlie", "robert", "alban", "oscar", "marie", "celine", "brad", "drew", "rebecca", "michel", "francis", "jean", "paul", "pierre", "nicolas",  "gerard", "louis", "albert", "edouard", "benoit", "guillaume", "nicolas", "joseph"];
