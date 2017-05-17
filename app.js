@@ -5,6 +5,34 @@ var app = angular.module('myApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
 app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log, $timeout, $window) {
 
 
+    $scope.app = {}
+    $scope.data = {
+        "name1": "",
+        "name2": "Entandrophragma",
+        "name3": "angolense",
+        "name4": "",
+        "name5": "",
+
+        "waterValue": 5.2,
+        "inventoryCondition": -20,
+
+        "inventoryDate": "2017.01.01",
+        "weight": 1000,
+        "kiloLipWeight": 27.5,
+        "lipCount": 0,
+
+        "inventoryPower": 60, //99
+
+        "groundValue": 2.2,
+        "dryTemperature": 15,
+        "dryHumidity": 15,
+        "resultWaterValue": 0,
+    }
+
+
+    $scope.findSpecies = function () {
+        console.log('find species')
+    }
 
     $scope.startsWith = function(state, viewValue) {
         return state.substr(0, viewValue.length).toLowerCase() == viewValue.toLowerCase();
@@ -54,7 +82,6 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
 
 
 
-    $scope.app = {}
 
     $('#sandbox-container input').datepicker({});
 
@@ -145,28 +172,6 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         $scope.data.name5 = '';
     }
 
-    $scope.data = {
-        "name1": "",
-        "name2": "Entandrophragma",
-        "name3": "angolense",
-        "name4": "",
-        "name5": "",
-
-        "waterValue": 5.2,
-        "inventoryCondition": -20,
-
-        "inventoryDate": "2017.01.01",
-        "weight": 1000,
-        "kiloLipWeight": 27.5,
-        "lipCount": 0,
-
-        "inventoryPower": 60, //99
-
-        "groundValue": 2.2,
-        "dryTemperature": 15,
-        "dryHumidity": 15,
-        "resultWaterValue": 0,
-    }
 
     $scope.family = [];
     d3.csv('data/family.csv', function (data) {
@@ -210,6 +215,13 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
     d3.csv('data/name.csv', function (data) {
         $scope.$apply(function () {
             $scope.nameData = data;
+        });
+    });
+
+    d3.csv('data/exception_genus.csv', function (data) {
+        $scope.$apply(function () {
+            $scope.exception_genus = data;
+            console.log($scope.exception_genus)
         });
     });
 
@@ -317,17 +329,18 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
             $scope.data.Cq = searchResults[0].Cq
             $scope.data.refDoc = searchResults[0].ref
         } else {
-            // console.log("Data not found")
-            $scope.data.name1 = "NO-NAME";
+
+            $scope.isVarEmpty = true;
+
+            // $scope.data.name1 = "";
+
+            // Alternative Value
             $scope.data.name2 = "Entandrophragma";
             $scope.data.name3 = "angolense";
             $scope.data.name4 = "";
             $scope.data.name5 = "";
             $scope.data.refDoc = "Tompsett, 1992"
 
-            $scope.isVarEmpty = true;
-
-            // 대체 Value
             $scope.data.Ke = 4.6;
             $scope.data.Cw = 2.21;
             $scope.data.Ch = 0.033;
@@ -335,7 +348,6 @@ app.controller('MainController', function ($scope, $http, $q, $filter, filterFil
         }
 
         // 찾은 이름으로 구글검색을 구성
-
         $scope.initSearchKeywords($scope.data.name2)
 
         $scope.seedName = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5 + " (" + $scope.data.refDoc + ")";
