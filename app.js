@@ -1,5 +1,53 @@
-var app = angular.module('myApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap']);
+var app = angular.module('myApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.router']);
 
+app.config(function($stateProvider, $urlRouterProvider) {
+    // var helloState = {
+    //     name: 'hello',
+    //     url: '/hello',
+    //     template: '<h3>hello world!</h3>'
+    // }
+    //
+    // var aboutState = {
+    //     name: 'about',
+    //     url: '/about',
+    //     template: '<h3>Its the UI-Router hello world app!</h3>'
+    // }
+
+    var introState = {
+        name: 'intro',
+        url: '/intro',
+        templateUrl: 'pages/intro/index.html',
+        controller: 'intro'
+    }
+
+    var seedState = {
+        name: 'seed',
+        url: '/seed',
+        templateUrl: 'pages/seed/index.html',
+        controller: 'seed'
+    }
+
+    $urlRouterProvider.otherwise('/seed');
+
+    // $stateProvider.state(helloState);
+    // $stateProvider.state(aboutState);
+    $stateProvider.state(seedState);
+    $stateProvider.state(introState);
+
+})
+
+app.controller('intro', function ($scope) {
+    console.log('intro');
+})
+
+app.controller('seed', function ($scope, $state) {
+    console.log('seed');
+    var organization = $window.localStorage.getItem('organization');
+
+    if (!organization) {
+        $state.go('intro')
+    }
+})
 
 
 app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log, $timeout, $window) {
