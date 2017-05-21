@@ -1,0 +1,69 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Estimating seed equilibrium</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <h5>Oil content</h5>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <input type="text" placeholder="" class="form-control"
+                               ng-model="data.groundValue">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                <h5>Ref.&nbsp;</h5>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <select class="form-control" ng-model='data.groundValue'
+                                ng-options='item.oil as item.name for item in oilData'>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <h5>Drying temp.(°C)</h5>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <input type="text" placeholder="" class="form-control"
+                               ng-model="data.dryTemperature">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <h5>Equilibrium RH(%)</h5>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <input type="text" placeholder="" class="form-control"
+                               ng-model="data.dryHumidity">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <h5>Moisture content(%)</h5>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <input type="text" placeholder="" class="form-control" readonly
+                               ng-model="data.resultWaterValue">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+
+            <button class="btn btn-success" style="margin: 5px 0" type="button"
+                    ng-click="calculateWaterValue()">Calculate
+            </button>
+        </div>
+
+        <div style="width: 328px; height: 305px; border: 1px solid #999; text-align: center">
+            <span ng-hide="oilWaters" style="line-height: 300px;">No data</span>
+            <div id="container_oil"></div>
+        </div>
+
+    </div>
+</div>

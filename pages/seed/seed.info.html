@@ -1,0 +1,201 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Seed Information</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Species information</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h5>Family</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" ng-model="data.name1"
+                                               uib-typeahead="item for item in family | filter:$viewValue:startsWith | limitTo:8"
+                                               typeahead-select-on-exact="true"
+                                               typeahead-show-hint="true"
+                                               typeahead-min-length="0"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h5>Genus</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" ng-model="data.name2"
+                                               uib-typeahead="item for item in genus | filter:$viewValue:startsWith | limitTo:8"
+                                               typeahead-select-on-exact="true"
+                                               typeahead-show-hint="true"
+                                               typeahead-min-length="0"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h5>Epithet</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" ng-model="data.name3" placeholder="Epithet"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <h5></h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h5>Variance</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <select class="form-control" ng-model="data.name4"
+                                                ng-options="key as value for (key , value) in varNames"
+                                                ng-change="varNameChanged()"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h5>Variance Epithet</h5>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="text" ng-model="data.name5" placeholder="Variance Epithet"
+                                               class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- List group -->
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="text-right">
+                            </div>
+                            <div class="row" style="height: 34px; line-height: 34px;">
+                                <div class="col-md-10">
+                                    <h4>
+                                        <span class="label" ng-class="{'No data': 'label-default', 'Found': 'label-info', 'Genus alternative':'label-warning', 'Constant alternative':'label-danger'}[message]" ng-bind="message"></span>
+                                        {{data.seedName}}
+                                    </h4>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-block btn-success"
+                                            ng-click="findSpecies()">Find</button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Data input</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Moisture content</h5>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="text" ng-model="data.waterValue" placeholder=""
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Storage temp. (°C)</h5>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="text" ng-model="data.inventoryCondition" placeholder=""
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Viability</h5>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="text" placeholder="" class="form-control"
+                                       ng-model="data.inventoryPower">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>Date</h5>
+                        <div class="row">
+                            <div class="span5 col-md-12" id="sandbox-container">
+                                <input type="text" class="form-control" data-date-format="yyyy.mm.dd"
+                                       ng-model="data.inventoryDate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <h5>Weight</h5>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="text" placeholder="" class="form-control" ng-model="data.weight"
+                                       ng-blur="calculateLipCount()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>1000 seed weight</h5>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="text" placeholder="" class="form-control"
+                                       ng-model="data.kiloLipWeight" ng-blur="calculateLipCount()">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Seed quantity</h5>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="text" placeholder="" class="form-control" readonly
+                                       ng-model="data.lipCount">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+            </div>
+        </div>
+
+
+        <!--<div class="row text-right">-->
+            <!--<div class="col-md-9"></div>-->
+            <!--<div class="col-md-3">-->
+                <!--<button class="btn btn-success btn-block btn-lg" type="button" ng-click="calculate()">-->
+                    <!--Calculate-->
+                <!--</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>

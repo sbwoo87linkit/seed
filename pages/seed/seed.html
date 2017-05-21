@@ -1,0 +1,45 @@
+<div>
+    <!--title-->
+    <div class="alert alert-info text-center" role="alert" style="margin: 50px">
+        <strong style="font-size: 1.6em">Monitoring Optimization Software  using Seed Viability Estimation</strong>
+    </div>
+    <!--organization name-->
+    <div class="text-right" style="margin: 10px 0">
+        <span style="font-size: 1.6em; color: #9d9d9d">{{organization}} </span>
+        <button ng-click="deleteOrganization()" class="btn btn-xs" style="margin:0 0 12px 10px">
+            <i class="fa fa-minus"></i>
+        </button>
+    </div>
+
+    <!-- upper section -->
+    <div class="row">
+        <div class="col-md-8">
+            <div ui-view="info"></div>
+        </div>
+        <div class="col-md-4">
+            <div ui-view="equilibrium"></div>
+        </div>
+    </div>
+
+    <!-- lower section -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Results</h3>
+                </div>
+                <div class="panel-body">
+
+                    <div ui-view="result"></div>
+
+                    <div ui-view="google_search"></div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

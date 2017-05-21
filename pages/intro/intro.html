@@ -1,0 +1,25 @@
+<div>
+    <div class="alert alert-info text-center" role="alert" style="margin: 50px">
+        <strong style="font-size: 1.6em">Monitoring Optimization Software  using Seed Viability Estimation</strong>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="row">
+                <div class="col-md-9">
+                    <form name="organizationForm">
+                        <div class="form-group-lg">
+                            <input type="text" ng-model="organizationName" ng-minlength="1" class="form-control"
+                                   id="organizationName" placeholder="Organization name">
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block"
+                            ng-click="saveOrganization(organizationName)"
+                            ng-disabled="!organizationForm.organizationName.$valid && !organizationName">Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
