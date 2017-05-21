@@ -11,14 +11,13 @@ app.controller('seed.google_search', function ($scope, $rootScope) {
         $scope.data = data;
         // 찾은 이름으로 구글검색을 구성
 
-        // $scope.initSearchKeywords($scope.data.name2)
-        $scope.keywords.unshift($scope.data.name2);
-        $scope.selection.unshift($scope.data.name2);
-
         if ($scope.data.name3) {
             $scope.keywords.unshift($scope.data.name3);
             $scope.selection.unshift($scope.data.name3);
         }
+
+        $scope.keywords.unshift($scope.data.name2);
+        $scope.selection.unshift($scope.data.name2);
 
     }
 

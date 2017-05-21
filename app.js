@@ -4,7 +4,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     var introState = {
         name: 'intro',
         url: '/intro',
-        templateUrl: 'pages/intro/intro.html',
+        templateUrl: 'pages/intro/main.html',
         controller: 'intro'
     }
 
@@ -13,23 +13,23 @@ app.config(function($stateProvider, $urlRouterProvider) {
         url: '/seed',
         views: {
             '': {
-                templateUrl: 'pages/seed/seed.html',
+                templateUrl: 'pages/seed/main.html',
                 controller: 'seed',
             },
             'info@seed': {
-                templateUrl: 'pages/seed/seed.info.html',
+                templateUrl: 'pages/seed/info.html',
                 controller: 'seed.info',
             },
             'equilibrium@seed': {
-                templateUrl: 'pages/seed/seed.equilibrium.html',
+                templateUrl: 'pages/seed/equilibrium.html',
                 controller: 'seed.equilibrium',
             },
             'result@seed': {
-                templateUrl: 'pages/seed/seed.result.html',
+                templateUrl: 'pages/seed/result.html',
                 controller: 'seed.result',
             },
             'google_search@seed': {
-                templateUrl: 'pages/seed/seed.google_search.html',
+                templateUrl: 'pages/seed/google_search.html',
                 controller: 'seed.google_search',
             },
         }
