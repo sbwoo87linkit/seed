@@ -21,8 +21,7 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
     $scope.$on('seed.found', function (event, data) {
         // console.log('equilibrium', data.seedName, $scope.data)
         $scope.data.seedName = data.seedName;
-        console.log($scope.data.seedName)
-
+        // console.log($scope.data.seedName)
     })
 
 
@@ -45,6 +44,9 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
             $('#myModal').modal('show')
             return;
         }
+
+        $scope.oilWaters = null;
+        // $scope.oilWaters.all = [];
 
         //5.94623587748127
         //100×((1−J4÷100)×SQRT((−440×LN(1−0.15))))÷(1.1+(15÷90))÷(100+((1−J4÷100)×SQRT((−440×LN(1−0.15))))÷(1.1+(15÷90)))
@@ -73,26 +75,22 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
             return a - b;
         });
 
-
-
-
         for (var i=0; i < $scope.oilWaters.humidity.length; i ++) {
             var Me = ((1 - $scope.data.groundValue / 100) * Math.sqrt(-440 * Math.log(1 - ($scope.oilWaters.humidity[i]) / 100))) / (1.1 + ($scope.data.dryTemperature / 90) )
             var waterValue = Math.round(100 * Me / ( 100 + Me) * 100) / 100;
 
             $scope.oilWaters.water.push(waterValue);
             if ($scope.oilWaters.humidity[i] === $scope.data.dryHumidity) {
-                $scope.oilWaters.all.push({x: $scope.oilWaters.humidity[i], y: waterValue, color: 'red'});
+                $scope.oilWaters.all.push({x: Number($scope.oilWaters.humidity[i]), y: waterValue, color: 'red'});
             } else {
-                $scope.oilWaters.all.push([$scope.oilWaters.humidity[i], waterValue]);
+                $scope.oilWaters.all.push([Number($scope.oilWaters.humidity[i]), waterValue]);
             }
-            // $scope.oilWaters.all.push([$scope.oilWaters.humidity[i], waterValue]);
+            // $scope.oilWaters.all.push([Number($scope.oilWaters.humidity[i]), waterValue]);
         }
         // console.log($scope.oilWaters);
+        console.log(JSON.stringify($scope.oilWaters.all));
 
         renderOilChart();
-
-
 
     }
 
@@ -126,16 +124,16 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
                     text: 'Equilibrium RH(%)'
                 },
                 categories: $scope.oilWaters.humidity,
-                plotLines: [{
-                    color: '#FF0000',
-                    width: 2,
-                    value: 1,
-                    label: {
-                        text: 'default',
-                        verticalAlign: 'middle',
-                        textAlign: 'center',
-                    }
-                }],
+                // plotLines: [{
+                //     color: '#FF0000',
+                //     width: 2,
+                //     value: 1,
+                //     label: {
+                //         text: 'default',
+                //         verticalAlign: 'middle',
+                //         textAlign: 'center',
+                //     }
+                // }],
             },
 
             yAxis: {

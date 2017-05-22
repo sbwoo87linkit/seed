@@ -24,14 +24,15 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
     $scope.seedChange = function (seed) {
         console.log(seed);
         var arr = seed.name.split(' ');
-        $scope.data.name2 = arr[0];
-        $scope.data.name3 = arr[1];
-        $scope.data.seedName = $scope.data.name2 + ' ' + $scope.data.name3;
+        // $scope.data.name2 = arr[0];
+        // $scope.data.name3 = arr[1];
+        $scope.data.seedTempName = arr[0] + ' ' + arr[1] + ' - ' + seed.ref;
+        // $scope.data.seedTempRef = seed.ref;
         $scope.data.Ke = seed.Ke;
         $scope.data.Cw = seed.Cw;
         $scope.data.Ch = seed.Ch;
         $scope.data.Cq = seed.Cq;
-        $rootScope.$broadcast('seed.changed', $scope.data)
+        // $rootScope.$broadcast('seed.changed', $scope.data)
     }
 
     $scope.$on('seed.found', function (event, data) {
