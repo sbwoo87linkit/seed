@@ -50,6 +50,7 @@ app.controller('seed.info', function ($scope, $rootScope) {
 
     // $scope.app = {}
 
+    $rootScope.app = {lotNo : 'A123'};
     $scope.data = {
         "name1": "",
         "name2": "Entandrophragma",

@@ -41,6 +41,11 @@ app.controller('seed.google_search', function ($scope, $rootScope) {
     };
 
     $scope.addKeyword = function (keyword) {
+
+        if (!keyword || !keyword.trim()) {
+            return;
+        }
+
         if ($scope.keywords.indexOf(keyword) === -1) {
             $scope.keywords.push(keyword);
             $scope.selection.push(keyword);

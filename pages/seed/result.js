@@ -19,7 +19,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
     });
 
 
-
     $scope.data = {};
     $scope.seedChange = function (seed) {
         console.log(seed);
@@ -42,12 +41,11 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
 
     $scope.calculate = function () {
 
-        if ( !$scope.data.Ke || !$scope.data.Cw || !$scope.data.Ch || !$scope.data.Cq ) {
+        if (!$scope.data.Ke || !$scope.data.Cw || !$scope.data.Ch || !$scope.data.Cq ) {
             $rootScope.modalMessage = 'Please check Ke, Cw, Ch and Cq fileds.'
             $('#myModal').modal('show')
             return false;
         }
-
 
 
 
@@ -66,27 +64,39 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         $scope.data.p85_P80 = addDays($scope.data.inventoryDate, $scope.data.p85Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p80Day)
         $scope.data.monitoringDay = $scope.data.p80Day - $scope.data.p90Day
 
+
         for (var i = $scope.monitoringData.length - 1; i >= 0; i--) {
             if (Number($scope.monitoringData[i].inventoryLipCount) <= $scope.data.lipCount) {
                 $scope.selectedMonitoringData = $scope.monitoringData[i];
                 break
             }
         }
+
+        if ($scope.selectedMonitoringData  === undefined) {
+            $rootScope.modalMessage = 'No data. Please find the seed first.'
+            $('#myModal').modal('show')
+            return false;
+        }
+
         $scope.data.monitoringDateList = [];
-        $scope.data.viability = {'p90' : 0, 'p80':0 };
+        $scope.data.viability = {'p90': 0, 'p80': 0};
+
+        // console.log($scope.selectedMonitoringData)
+        // console.log($scope.selectedMonitoringData.monitoringCount)
+
         var diff = Math.round((0.9 - 0.8) / ($scope.selectedMonitoringData.monitoringCount - 1) * 10000) / 10000;
         var item = {
             percent: 0.990 * 100,
-            date : $scope.data.inventoryDate,
+            date: $scope.data.inventoryDate,
             power: Number($scope.data.inventoryPower)
         }
         $scope.data.monitoringDateList.push(item);
         var baseNormSInv = NormSInv(0.990);
 
         for (var i = 0; i < $scope.selectedMonitoringData.monitoringCount; i++) {
-            var percent = Math.round( (0.9 - (diff * i)) *  1000) / 1000;
+            var percent = Math.round((0.9 - (diff * i)) * 1000) / 1000;
             var normSInv = Math.round(NormSInv(percent) * 1000) / 1000;
-            var daysFactor = Math.round( (baseNormSInv - normSInv) *1000) / 1000;
+            var daysFactor = Math.round((baseNormSInv - normSInv) * 1000) / 1000;
             var days = Math.round($scope.data.sigmaDay * daysFactor);
             item = {
                 powerPercent: percent,
@@ -107,7 +117,7 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         }
 
         for (var i = 7; i > 0; i--) {
-            var percent = 0.1  * i;
+            var percent = 0.1 * i;
             var normSInv = NormSInv(percent);
             var daysFactor = baseNormSInv - normSInv;
             var days = $scope.data.sigmaDay * daysFactor;
@@ -127,90 +137,206 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         $scope.seed.powers = []
         $scope.seed.scaled = []
 
-        for(var i = 0; i < $scope.data.monitoringDateList.length; i++) {
+        for (var i = 0; i < $scope.data.monitoringDateList.length; i++) {
             $scope.seed.dates.push($scope.data.monitoringDateList[i].date);
             $scope.seed.powers.push($scope.data.monitoringDateList[i].power);
             var date = new Date('2017.01.01').getTime();
-            var x= new Date($scope.data.monitoringDateList[i].date).getTime();
-            var y= $scope.data.monitoringDateList[i].power;
+            var x = new Date($scope.data.monitoringDateList[i].date).getTime();
+            var y = $scope.data.monitoringDateList[i].power;
             var color;
             if (y <= $scope.data.viability.p90 && y >= $scope.data.viability.p80) {
                 color = 'red';
             } else {
                 color = Highcharts.getOptions().colors[0];
             }
-            $scope.seed.scaled.push({ x: x, y: y, color: color});
+            $scope.seed.scaled.push({x: x, y: y, color: color});
         }
         renderSeedChart();
+        $scope.isReady = true;
     }
 
-    function renderSeedChart(){
+    $scope.chartConfig = {
+        chart: {
+            type: 'spline'
+        },
+        credits: {enabled: false},
+        title: {
+            text: 'Seed moisture isotherm'
+        },
+        // xAxis: {
+        //     // type: 'linear',
+        //     title: {
+        //         text: 'Equilibrium RH(%)'
+        //     }
+        // },
+        //
+        // yAxis: {
+        //     title: {
+        //         text: 'Moisture content(%)'
+        //     }
+        // },
 
-        Highcharts.chart('container_seed', {
-            chart: {
-                type: 'spline'
-            },
-
-            credits : { enabled: false},
-
+        xAxis: {
+            type: 'datetime',
             title: {
-                text: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date),
-                style: {
-                    fontWeight: 'bold',
-                    fontSize: "24px"
-                }
-            },
-
-            xAxis: {
-                type: 'datetime',
-                title: {
-                    text: 'Year'
-                }
-            },
-
-            yAxis: {
-                title: {
-                    text: 'Viability(%)'
-                },
-                min: 0
-            },
-
-            legend: {
-                enabled: false,
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle'
-            },
-
-            tooltip : {
-                crosshairs: [{
-                    width: 1,
-                    dashStyle: 'solid',
-                    color: 'red'
-                }, {
-                    width: 1,
-                    dashStyle: 'solid',
-                    color: 'red'
-                }],
-            },
-            plotOptions: {
-                series: {
-                    marker: {
-                        fillColor: '#FFFFFF',
-                        lineWidth: 2,
-                        lineColor: null // inherit from series
-                    }
-                }
-            },
-
-            series: [{
-                name: 'Viability',
-                data: $scope.seed.scaled
-            }],
-            exporting: {
-                filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+                text: 'Year'
             }
-        });
+        },
+
+        yAxis: {
+            title: {
+                text: 'Viability(%)'
+            },
+            min: 0
+        },
+
+
+        legend: {
+            enabled: false
+        },
+        // tooltip: {
+        //     formatter: function () {
+        //         var tooltip;
+        //         // if (this.key == 'last') {
+        //         //     tooltip = '<b>Final result is </b> ' + this.y;
+        //         // }
+        //         // else {
+        //         //     tooltip =  '';
+        //         // }
+        //         tooltip = '<span style="color:' + this.series.color + '">' + 'Equilibrium RH(%)' + '</span>: <b>' + this.x + '</b><br/>';
+        //         tooltip = tooltip + '<span style="color:' + this.series.color + '">' + this.series.name + '(%)</span>: <b>' + this.y + '</b><br/>'
+        //         return tooltip;
+        //     },
+        //     crosshairs: [{
+        //         width: 1,
+        //         dashStyle: 'solid',
+        //         color: 'red'
+        //     }, {
+        //         width: 1,
+        //         dashStyle: 'solid',
+        //         color: 'red'
+        //     }],
+        // },
+        tooltip: {
+            formatter: function () {
+                // var tooltip;
+                // tooltip = '<span style="color:' + this.series.color + '">' + 'Equilibrium RH(%)' + '</span>: <b>' + this.x + '</b><br/>';
+                // tooltip = tooltip + '<span style="color:' + this.series.color + '">' + this.series.name + '(%)</span>: <b>' + this.y + '</b><br/>'
+                // return tooltip;
+
+                return  '<b>' + this.series.name +'</b><br/>' +
+                    this.y + ' % in ' + Highcharts.dateFormat('%Y', new Date(this.x));
+            },
+            crosshairs: [{
+                width: 1,
+                dashStyle: 'solid',
+                color: 'red'
+            }, {
+                width: 1,
+                dashStyle: 'solid',
+                color: 'red'
+            }],
+        },
+
+        plotOptions: {
+            series: {
+                marker: {
+                    enabled: true,
+                    fillColor: '#FFFFFF',
+                    lineWidth: 1,
+                    lineColor: null // inherit from series
+                }
+            }
+        },
+        exporting: {
+            filename: $rootScope.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+        }
+    }
+
+
+    function renderSeedChart() {
+
+        $scope.chartConfig.series = [{
+            name: 'Viability',
+            data: $scope.seed.scaled
+        }];
+
+        // $scope.chartConfig.title.text =
+        //     $rootScope.app.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+
+        var name = $rootScope.app.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+
+        $scope.chartConfig.title.text = name;
+        $scope.chartConfig.exporting.filename = name;
+
+        /*
+         Highcharts.chart('container_seed', {
+         chart: {
+         type: 'spline'
+         },
+
+         credits : { enabled: false},
+
+         title: {
+         text: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date),
+         style: {
+         fontWeight: 'bold',
+         fontSize: "24px"
+         }
+         },
+
+         xAxis: {
+         type: 'datetime',
+         title: {
+         text: 'Year'
+         }
+         },
+
+         yAxis: {
+         title: {
+         text: 'Viability(%)'
+         },
+         min: 0
+         },
+
+         legend: {
+         enabled: false,
+         layout: 'vertical',
+         align: 'right',
+         verticalAlign: 'middle'
+         },
+
+         tooltip : {
+         crosshairs: [{
+         width: 1,
+         dashStyle: 'solid',
+         color: 'red'
+         }, {
+         width: 1,
+         dashStyle: 'solid',
+         color: 'red'
+         }],
+         },
+         plotOptions: {
+         series: {
+         marker: {
+         fillColor: '#FFFFFF',
+         lineWidth: 2,
+         lineColor: null // inherit from series
+         }
+         }
+         },
+
+         series: [{
+         name: 'Viability',
+         data: $scope.seed.scaled
+         }],
+         exporting: {
+         filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+         }
+         });
+         */
+
     }
 
     function getDays(percent) {
@@ -221,9 +347,8 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         var baseNormSInv = NormSInv(0.990);
         // var percent = Math.round( (0.9 - (diff * i)) *  1000) / 1000;
         var normSInv = Math.round(NormSInv(percent) * 1000) / 1000;
-        var daysFactor = Math.round( (baseNormSInv - normSInv) *1000) / 1000;
+        var daysFactor = Math.round((baseNormSInv - normSInv) * 1000) / 1000;
         var days = Math.round($scope.data.sigmaDay * daysFactor);
-
 
 
         // var normSInv = NormSInv(percent);
@@ -252,7 +377,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
     }
 
 
-
     function zeroPad(num, places) {
         var zero = places - num.toString().length + 1;
         return Array(+(zero > 0 && zero)).join("0") + num;
@@ -270,24 +394,20 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         var q, r;
         var retVal;
 
-        if ((p < 0) || (p > 1))
-        {
+        if ((p < 0) || (p > 1)) {
             alert("NormSInv: Argument out of range.");
             retVal = 0;
         }
-        else if (p < p_low)
-        {
+        else if (p < p_low) {
             q = Math.sqrt(-2 * Math.log(p));
             retVal = (((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) / ((((d1 * q + d2) * q + d3) * q + d4) * q + 1);
         }
-        else if (p <= p_high)
-        {
+        else if (p <= p_high) {
             q = p - 0.5;
             r = q * q;
             retVal = (((((a1 * r + a2) * r + a3) * r + a4) * r + a5) * r + a6) * q / (((((b1 * r + b2) * r + b3) * r + b4) * r + b5) * r + 1);
         }
-        else
-        {
+        else {
             q = Math.sqrt(-2 * Math.log(1 - p));
             retVal = -(((((c1 * q + c2) * q + c3) * q + c4) * q + c5) * q + c6) / ((((d1 * q + d2) * q + d3) * q + d4) * q + 1);
         }
@@ -352,7 +472,21 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
     }
 
     $scope.exportJsonToCsv = function () {
-        for(var i=0; i < $scope.data.monitoringDateList.length; i++) {
+
+        // if (!$scope.data.Ke || !$scope.data.Cw || !$scope.data.Ch || !$scope.data.Cq) {
+        //     $rootScope.modalMessage = 'Please check Ke, Cw, Ch and Cq fileds.'
+        //     $('#myModal').modal('show')
+        //     return false;
+        // }
+
+        if (!$scope.data.monitoringDateList) {
+            $rootScope.modalMessage = 'No data. Please find and calculate.'
+            $('#myModal').modal('show')
+            return false;
+        }
+
+
+        for (var i = 0; i < $scope.data.monitoringDateList.length; i++) {
             $scope.data.monitoringDateList[i].index = i;
             delete $scope.data.monitoringDateList[i].$$hashKey;
         }
@@ -361,9 +495,11 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
 
         var json = $scope.data.monitoringDateList;
         var fields = Object.keys(json[0]);
-        var replacer = function(key, value) { return value === null ? '' : value };
-        var csv = json.map(function(row){
-            return fields.map(function(fieldName){
+        var replacer = function (key, value) {
+            return value === null ? '' : value
+        };
+        var csv = json.map(function (row) {
+            return fields.map(function (fieldName) {
                 return JSON.stringify(row[fieldName], replacer)
             }).join(',');
         });
@@ -373,9 +509,8 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         csv = csv.join('\r\n');
         var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
         // filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + formatDate(new Date)
-        saveAs(blob, 'Monitoring_date' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date) + '.csv');
+        saveAs(blob, $rootScope.app.lotNo + ' Monitoring_date' + '-' + $scope.data.name2 + '_' + $scope.data.name3 + '-' + utilService.formatDate(new Date) + '.csv');
     }
-
 
 
 })

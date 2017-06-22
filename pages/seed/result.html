@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-9 col-sm-9 col-xs-12">
-        <h4>Seed viability constant : <span
+        <h4>Seed Viability Constant : <span
                 style="font-size: 0.9em; padding: 0px 10px; margin-left: 10px">{{data.seedTempName}}</span>
         </h4>
         <div class="row">
@@ -14,7 +14,7 @@
             </div>
             <div class="col-md-6 text-right">
                 <button class="btn btn-block btn-success btn-sm" ng-click="data.Ch=0.0329; data.Cq=0.000478">
-                    Apply universal constant value for Ch and Cq
+                    Apply Universal Constant Value For Ch and Cq
                 </button>
             </div>
         </div>
@@ -85,17 +85,17 @@
         </div>
         <div class="row">
             <div class="col-md-3 form-group">
-                <label>monitoring period(day)</label>
+                <label>Monitoring Period(day)</label>
                 <input type="text" ng-model="data.monitoringDay" placeholder=""
                        class="form-control" readonly>
             </div>
             <div class="col-md-3 form-group">
-                <label>test seed count </label>
+                <label>Test Seed Count </label>
                 <input type="text" ng-model="data.testLipCount" placeholder=""
                        class="form-control" readonly>
             </div>
             <div class="col-md-6 form-group">
-                <label>monitoring condition</label>
+                <label>Monitoring Condition</label>
                 <input type="text" ng-model="data.monitoringCondition" placeholder=""
                        class="form-control" readonly>
             </div>
@@ -115,8 +115,10 @@
 
         <div class="row">
             <div class="col-md-12" style="margin-top: 10px;">
-                <div ng-show="!seed.scaled" style="height: 200px; border: 1px solid #999; line-height: 200px; text-align: center">no data</div>
-                <div ng-show="seed.scaled" id="container_seed"></div>
+                <div ng-if="!isReady" style="height: 200px; border: 1px solid #999; line-height: 200px; text-align: center">no data</div>
+                <highchart ng-if="isReady" id="chart1" config="chartConfig" style="min-width: 250px; width: 100%; height: 100%"></highchart>
+
+                <!--<div ng-show="seed.scaled" id="container_seed"></div>-->
             </div>
         </div>
     </div>
@@ -125,7 +127,7 @@
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                 <div style="margin-bottom: 10px">
-                    <label>monitoring table</label>
+                    <label>Monitoring Table</label>
                     <div class="pull-right">
                         <button class="btn btn-success btn-xs" ng-click="exportJsonToCsv()">CSV
                             export
@@ -137,8 +139,8 @@
                 <table class="table" ng-show="data.monitoringDateList">
                     <tr>
                         <th>#</th>
-                        <th>date</th>
-                        <th>viability(% est.)</th>
+                        <th>Date</th>
+                        <th>Viability(% est.)</th>
                         <th>%</th>
                     </tr>
                     <tr ng-if="$index <= (selectedMonitoringData.monitoringCount)"

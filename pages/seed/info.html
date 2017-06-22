@@ -7,7 +7,7 @@
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Species information</h3>
+                        <h3 class="panel-title">Species Information</h3>
                     </div>
                     <div class="panel-body">
                         <div class="row">
@@ -111,13 +111,22 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Data input</h3>
+                <h3 class="panel-title">Seed Lot Information</h3>
             </div>
             <div class="panel-body">
 
                 <div class="row">
-                    <div class="col-md-4">
-                        <h5>Moisture content</h5>
+                    <div class="col-md-3">
+                        <h5>Seed Lot No.</h5>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="text" ng-model="app.lotNo" placeholder="Lot No."
+                                       class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h5>Moisture Content</h5>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                 <input type="text" ng-model="data.waterValue" placeholder=""
@@ -125,8 +134,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <h5>Storage temp. (°C)</h5>
+                    <div class="col-md-3">
+                        <h5>Storage Temp.(°C)</h5>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                 <input type="text" ng-model="data.inventoryCondition" placeholder=""
@@ -134,7 +143,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h5>Viability</h5>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
@@ -146,7 +155,7 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h5>Date</h5>
                         <div class="row">
                             <div class="span5 col-md-12" id="sandbox-container">
@@ -155,8 +164,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <h5>Weight</h5>
+                    <div class="col-md-3">
+                        <h5>Weight(g)</h5>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                 <input type="text" placeholder="" class="form-control" ng-model="data.weight"
@@ -165,7 +174,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <h5>1000 seed weight</h5>
+                        <h5>1000 Seed Weight(%)</h5>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                 <input type="text" placeholder="" class="form-control"
@@ -174,7 +183,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <h5>Seed quantity</h5>
+                        <h5>Seed Quantity</h5>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                                 <input type="text" placeholder="" class="form-control" readonly

@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.router']);
+var app = angular.module('myApp', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ui.router', 'highcharts-ng']);
 
 app.config(function($stateProvider, $urlRouterProvider) {
     var introState = {

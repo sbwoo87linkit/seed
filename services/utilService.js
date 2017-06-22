@@ -1,8 +1,8 @@
 app.factory('utilService', utilService);
 
-utilService.$inject = ['$http'];
+utilService.$inject = [];
 
-function utilService($http) {
+function utilService() {
     var obj = {};
     obj.formatDate = function(date) {
         return date.getFullYear() + '.' + (Number(date.getMonth())+1) + '.' + date.getDate()
