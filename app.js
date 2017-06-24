@@ -35,44 +35,23 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
     }
 
-    var aboutState = {
-        name: 'about',
-        url: '/about',
-        template: '<h1>about</h1>',
-        // controller: 'seed'
-    }
-
     $urlRouterProvider.otherwise('/seed');
 
     $stateProvider.state(seedState);
     $stateProvider.state(introState);
-    $stateProvider.state(aboutState);
 
 })
 
 app.run(function ($state, $stateParams, $window, $rootScope, $transitions) {
 
-    // $rootScope.$state = $state;
-    // $rootScope.$stateParams = $stateParams;
-
-
     $transitions.onStart( { to: 'seed' }, function(trans) {
         var organization = $window.localStorage.getItem('organization');
-        // console.log('organization', organization)
-
         if (!organization) {
-            console.log('transition to intro')
             return $state.target("intro");
         }
     })
 })
 
-
-
-
-
 app.controller('MainController', function ($scope, $http, $q, $filter, filterFilter, $log, $timeout, $window) {
-
-
 
 })

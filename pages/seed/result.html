@@ -99,10 +99,7 @@
                 <input type="text" ng-model="data.monitoringCondition" placeholder=""
                        class="form-control" readonly>
             </div>
-
-
         </div>
-
         <div class="row" style="margin-top: 10px">
             <div class="col-md-3 col-md-offset-9">
                 <button class="btn btn-success btn-block btn-lg" type="button"
@@ -111,14 +108,10 @@
                 </button>
             </div>
         </div>
-
-
         <div class="row">
             <div class="col-md-12" style="margin-top: 10px;">
                 <div ng-if="!isReady" style="height: 200px; border: 1px solid #999; line-height: 200px; text-align: center">no data</div>
                 <highchart ng-if="isReady" id="chart1" config="chartConfig" style="min-width: 250px; width: 100%; height: 100%"></highchart>
-
-                <!--<div ng-show="seed.scaled" id="container_seed"></div>-->
             </div>
         </div>
     </div>

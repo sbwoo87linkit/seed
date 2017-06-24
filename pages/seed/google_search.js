@@ -9,13 +9,10 @@ app.controller('seed.google_search', function ($scope, $rootScope) {
     function buildKeywords(data) {
         initKeywords();
         $scope.data = data;
-        // 찾은 이름으로 구글검색을 구성
-
         if ($scope.data.name3) {
             $scope.keywords.unshift($scope.data.name3);
             $scope.selection.unshift($scope.data.name3);
         }
-
         $scope.keywords.unshift($scope.data.name2);
         $scope.selection.unshift($scope.data.name2);
 
@@ -56,8 +53,6 @@ app.controller('seed.google_search', function ($scope, $rootScope) {
     $scope.site = {};
     $scope.site.name = 'Google Scholar Search'
     $scope.search = function() {
-
-        console.log($scope.selection);
         if ($scope.selection.length < 1) {
             $rootScope.modalMessage = 'Please select keywords.'
             $('#myModal').modal('show')
@@ -81,6 +76,4 @@ app.controller('seed.google_search', function ($scope, $rootScope) {
         var url = prefix + q;
         window.open(url, '_blank', 'location=yes,scrollbars=yes,status=yes');
     }
-
-
 })

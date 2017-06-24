@@ -21,21 +21,15 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
 
     $scope.data = {};
     $scope.seedChange = function (seed) {
-        console.log(seed);
         var arr = seed.name.split(' ');
-        // $scope.data.name2 = arr[0];
-        // $scope.data.name3 = arr[1];
         $scope.data.seedTempName = arr[0] + ' ' + arr[1] + ' - ' + seed.ref;
-        // $scope.data.seedTempRef = seed.ref;
         $scope.data.Ke = seed.Ke;
         $scope.data.Cw = seed.Cw;
         $scope.data.Ch = seed.Ch;
         $scope.data.Cq = seed.Cq;
-        // $rootScope.$broadcast('seed.changed', $scope.data)
     }
 
     $scope.$on('seed.found', function (event, data) {
-        // console.log('result', data)
         $scope.data = data;
     })
 
@@ -47,12 +41,9 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
             return false;
         }
 
-
-
         $scope.seedName = $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5 + " (" + $scope.data.refDoc + ")";
         var logSigma = $scope.data.Ke - ( $scope.data.Cw * Math.log($scope.data.waterValue) / Math.log(10) ) - $scope.data.Ch * (-20) - $scope.data.Cq * (-20 * -20)
         $scope.data.sigmaDay = Math.round(Math.pow(10, logSigma))
-
         $scope.data.sigmaYear = Math.round($scope.data.sigmaDay / 365)
         $scope.data.p90Day = Math.round(getDays(0.9));
         $scope.data.p90Year = Math.round($scope.data.p90Day / 365)
@@ -63,7 +54,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         $scope.data.p90_P85 = addDays($scope.data.inventoryDate, $scope.data.p90Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p85Day)
         $scope.data.p85_P80 = addDays($scope.data.inventoryDate, $scope.data.p85Day) + " ~ " + addDays($scope.data.inventoryDate, $scope.data.p80Day)
         $scope.data.monitoringDay = $scope.data.p80Day - $scope.data.p90Day
-
 
         for (var i = $scope.monitoringData.length - 1; i >= 0; i--) {
             if (Number($scope.monitoringData[i].inventoryLipCount) <= $scope.data.lipCount) {
@@ -80,9 +70,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
 
         $scope.data.monitoringDateList = [];
         $scope.data.viability = {'p90': 0, 'p80': 0};
-
-        // console.log($scope.selectedMonitoringData)
-        // console.log($scope.selectedMonitoringData.monitoringCount)
 
         var diff = Math.round((0.9 - 0.8) / ($scope.selectedMonitoringData.monitoringCount - 1) * 10000) / 10000;
         var item = {
@@ -163,26 +150,12 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         title: {
             text: 'Seed moisture isotherm'
         },
-        // xAxis: {
-        //     // type: 'linear',
-        //     title: {
-        //         text: 'Equilibrium RH(%)'
-        //     }
-        // },
-        //
-        // yAxis: {
-        //     title: {
-        //         text: 'Moisture content(%)'
-        //     }
-        // },
-
         xAxis: {
             type: 'datetime',
             title: {
                 text: 'Year'
             }
         },
-
         yAxis: {
             title: {
                 text: 'Viability(%)'
@@ -190,40 +163,11 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
             min: 0
         },
 
-
         legend: {
             enabled: false
         },
-        // tooltip: {
-        //     formatter: function () {
-        //         var tooltip;
-        //         // if (this.key == 'last') {
-        //         //     tooltip = '<b>Final result is </b> ' + this.y;
-        //         // }
-        //         // else {
-        //         //     tooltip =  '';
-        //         // }
-        //         tooltip = '<span style="color:' + this.series.color + '">' + 'Equilibrium RH(%)' + '</span>: <b>' + this.x + '</b><br/>';
-        //         tooltip = tooltip + '<span style="color:' + this.series.color + '">' + this.series.name + '(%)</span>: <b>' + this.y + '</b><br/>'
-        //         return tooltip;
-        //     },
-        //     crosshairs: [{
-        //         width: 1,
-        //         dashStyle: 'solid',
-        //         color: 'red'
-        //     }, {
-        //         width: 1,
-        //         dashStyle: 'solid',
-        //         color: 'red'
-        //     }],
-        // },
         tooltip: {
             formatter: function () {
-                // var tooltip;
-                // tooltip = '<span style="color:' + this.series.color + '">' + 'Equilibrium RH(%)' + '</span>: <b>' + this.x + '</b><br/>';
-                // tooltip = tooltip + '<span style="color:' + this.series.color + '">' + this.series.name + '(%)</span>: <b>' + this.y + '</b><br/>'
-                // return tooltip;
-
                 return  '<b>' + this.series.name +'</b><br/>' +
                     this.y + ' % in ' + Highcharts.dateFormat('%Y', new Date(this.x));
             },
@@ -237,7 +181,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
                 color: 'red'
             }],
         },
-
         plotOptions: {
             series: {
                 marker: {
@@ -253,126 +196,31 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         }
     }
 
-
     function renderSeedChart() {
-
         $scope.chartConfig.series = [{
             name: 'Viability',
             data: $scope.seed.scaled
         }];
-
-        // $scope.chartConfig.title.text =
-        //     $rootScope.app.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
-
         var name = $rootScope.app.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
-
         $scope.chartConfig.title.text = name;
         $scope.chartConfig.exporting.filename = name;
-
-        /*
-         Highcharts.chart('container_seed', {
-         chart: {
-         type: 'spline'
-         },
-
-         credits : { enabled: false},
-
-         title: {
-         text: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date),
-         style: {
-         fontWeight: 'bold',
-         fontSize: "24px"
-         }
-         },
-
-         xAxis: {
-         type: 'datetime',
-         title: {
-         text: 'Year'
-         }
-         },
-
-         yAxis: {
-         title: {
-         text: 'Viability(%)'
-         },
-         min: 0
-         },
-
-         legend: {
-         enabled: false,
-         layout: 'vertical',
-         align: 'right',
-         verticalAlign: 'middle'
-         },
-
-         tooltip : {
-         crosshairs: [{
-         width: 1,
-         dashStyle: 'solid',
-         color: 'red'
-         }, {
-         width: 1,
-         dashStyle: 'solid',
-         color: 'red'
-         }],
-         },
-         plotOptions: {
-         series: {
-         marker: {
-         fillColor: '#FFFFFF',
-         lineWidth: 2,
-         lineColor: null // inherit from series
-         }
-         }
-         },
-
-         series: [{
-         name: 'Viability',
-         data: $scope.seed.scaled
-         }],
-         exporting: {
-         filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
-         }
-         });
-         */
-
     }
 
     function getDays(percent) {
-        // var diff = (0.9 - 0.8) / ($scope.selectedMonitoringData.monitoringCount - 1);
-        // var percent = value - (diff * i);
-
-
         var baseNormSInv = NormSInv(0.990);
-        // var percent = Math.round( (0.9 - (diff * i)) *  1000) / 1000;
         var normSInv = Math.round(NormSInv(percent) * 1000) / 1000;
         var daysFactor = Math.round((baseNormSInv - normSInv) * 1000) / 1000;
         var days = Math.round($scope.data.sigmaDay * daysFactor);
-
-
-        // var normSInv = NormSInv(percent);
-        // var daysFactor = baseNormSInv - normSInv;
-        // var days = $scope.data.sigmaDay * daysFactor;
         return days;
-
     }
 
     function addDays(baseDate, numberOfDaysToAdd) {
-        // console.log(baseDate)
         var someDate = new Date(baseDate);
-        // console.log(someDate)
-        // var numberOfDaysToAdd = 6;
         someDate.setDate(someDate.getDate() + numberOfDaysToAdd);
-        // Formatting to dd/mm/yyyy :
-
         var dd = someDate.getDate();
         var mm = someDate.getMonth() + 1;
         var y = someDate.getFullYear();
-
-        // var someFormattedDate = dd + '/'+ mm + '/'+ y;
         var someFormattedDate = y + '.' + zeroPad(mm, 2) + '.' + zeroPad(dd, 2);
-        // console.log(someFormattedDate)
         return someFormattedDate
     }
 
@@ -416,7 +264,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
     }
 
     $scope.save = function () {
-        console.log('save')
         var out = "입고종자 정보";
         out = out + "\n" + "-----";
         out = out + "\n" + "종정보 : " + $scope.data.name2 + " " + $scope.data.name3 + " " + $scope.data.name4 + " " + $scope.data.name5 + " (" + $scope.data.refDoc + ")";
@@ -441,9 +288,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         out = out + "\n" + "권장 모니터링일 : ";
         out = out + '\n- ' + $scope.data.monitoringDate.split('\n').join('\n- ');
 
-        // var blob = new Blob([out], {type: "text/plain;charset=utf-8"});
-        // saveAs(blob, "result.txt");
-
         var csvData = '입고 종자 정보';
         csvData = csvData + '\n' + '종정보,' + '"Oryza sativa var. japonica (Ellis et al., 1992)"';
         csvData = csvData + '\n' + '수분함량,' + '5.2';
@@ -452,32 +296,11 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
 
         var BOM = "\uFEFF";
         csvData = BOM + csvData;
-        console.log(csvData);
-        // csvData = csvData + 'title,"지질함량에 따른 수분함량 계산"';
-
         var blob = new Blob([csvData], {type: "text/csv;charset=utf-8"});
         saveAs(blob, "myFile.csv");
-
-        // var csvData = '';
-        // var BOM = "\uFEFF";
-        // csvData = BOM + 'title,"지질함량에 따른 수분함량 계산"' + '\n';
-        // csvData = csvData + 'Cq, 0.12, Ch, 0.15';
-        //
-        //
-        //
-        // var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
-        // saveAs(blob, "myFile.csv");
-
-
     }
 
     $scope.exportJsonToCsv = function () {
-
-        // if (!$scope.data.Ke || !$scope.data.Cw || !$scope.data.Ch || !$scope.data.Cq) {
-        //     $rootScope.modalMessage = 'Please check Ke, Cw, Ch and Cq fileds.'
-        //     $('#myModal').modal('show')
-        //     return false;
-        // }
 
         if (!$scope.data.monitoringDateList) {
             $rootScope.modalMessage = 'No data. Please find and calculate.'
@@ -491,8 +314,6 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
             delete $scope.data.monitoringDateList[i].$$hashKey;
         }
         $scope.data.monitoringDateList.splice(Number($scope.selectedMonitoringData.monitoringCount) + 1, 7);
-        console.log($scope.data.monitoringDateList);
-
         var json = $scope.data.monitoringDateList;
         var fields = Object.keys(json[0]);
         var replacer = function (key, value) {
@@ -504,13 +325,10 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
             }).join(',');
         });
         csv.unshift(fields.join(',')); // add header column
-
-        console.log(csv.join('\r\n'));
         csv = csv.join('\r\n');
         var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
         // filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + formatDate(new Date)
         saveAs(blob, $rootScope.app.lotNo + ' Monitoring_date' + '-' + $scope.data.name2 + '_' + $scope.data.name3 + '-' + utilService.formatDate(new Date) + '.csv');
     }
-
 
 })

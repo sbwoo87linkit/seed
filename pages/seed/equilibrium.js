@@ -70,9 +70,6 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
             var waterValue = Math.round(100 * Me / ( 100 + Me) * 100) / 100;
 
             $scope.oilWaters.water.push(waterValue);
-
-            console.log(JSON.stringify($scope.oilWaters.humidity))
-
             if ($scope.oilWaters.humidity[i] === $scope.data.dryHumidity) {
                 $scope.oilWaters.all.push({x: Number($scope.oilWaters.humidity[i]), y: waterValue, color: 'red'});
             } else {
