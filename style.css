@@ -98,3 +98,13 @@ Intro screen
 body.modal-open {
     overflow: visible;
 }
+
+.label-container{
+    line-height: 3em;
+    margin-top: 10px;
+}
+.label-container > span{
+    display:inline-block;
+    line-height:1.5em;
+    vertical-align:bottom;
+}

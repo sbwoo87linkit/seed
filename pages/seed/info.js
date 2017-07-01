@@ -34,14 +34,23 @@ app.controller('seed.info', function ($scope, $rootScope) {
         });
     });
 
+    d3.csv('data/exception_family.csv', function (data) {
+        $scope.$apply(function () {
+            $scope.exception_family = data;
+            // console.log($scope.exception_genus)
+        });
+    });
+
     $scope.message = 'No data';
-    $rootScope.app = {lotNo : 'A123'};
+    // $rootScope.app = {lotNo : 'A123'};
     $scope.data = {
-        "name1": "",
+        "name1": "GRAMINEAE",
         "name2": "Entandrophragma",
         "name3": "angolense",
         "name4": "",
         "name5": "",
+
+        "lotNo": "A123",
 
         "waterValue": 5.2,
         "inventoryCondition": -20,
@@ -56,6 +65,13 @@ app.controller('seed.info', function ($scope, $rootScope) {
 
 
     $scope.findSpecies = function () {
+
+        if (!$scope.data.name1) {
+            $rootScope.modalMessage = 'Family field is required.';
+            $('#myModal').modal('show');
+            return;
+        }
+
         if (!$scope.data.name2) {
             $rootScope.modalMessage = 'Genus field is required.';
             $('#myModal').modal('show');
@@ -80,6 +96,8 @@ app.controller('seed.info', function ($scope, $rootScope) {
             return item.name == searchName
         });
 
+        var seedName = "";
+
         if (searchResults.length > 0) {
             $scope.message = 'Found';
             $scope.data.Ke = searchResults[0].Ke;
@@ -87,7 +105,10 @@ app.controller('seed.info', function ($scope, $rootScope) {
             $scope.data.Ch = searchResults[0].Ch;
             $scope.data.Cq = searchResults[0].Cq;
             $scope.data.refDoc = searchResults[0].ref
+            seedName = $scope.data.name2 + " " + $scope.data.name3 + "-" + $scope.data.refDoc;
         } else {
+
+            // genus 예외처리
             searchResults = $scope.exception_genus.filter(function (item) {
                 return item.Genus == $scope.data.name2
             });
@@ -95,31 +116,55 @@ app.controller('seed.info', function ($scope, $rootScope) {
             if (searchResults.length > 0) {
                 $scope.message = 'Genus alternative';
                 $scope.data.name2 = searchResults[0].Genus;
-                $scope.data.name3 = "";
-                $scope.data.name4 = "";
-                $scope.data.name5 = "";
                 $scope.data.Ke = searchResults[0].Ke;
                 $scope.data.Cw = searchResults[0].Cw;
                 $scope.data.Ch = searchResults[0].Ch;
                 $scope.data.Cq = searchResults[0].Cq;
                 $scope.data.refDoc = searchResults[0].ref
+                seedName = $scope.data.refDoc;
             } else {
-                $scope.message = 'Constant alternative';
-                $scope.data.name2 = "Entandrophragma";
-                $scope.data.name3 = "angolense";
-                $scope.data.name4 = "";
-                $scope.data.name5 = "";
-                $scope.data.refDoc = "Tompsett, 1992";
 
-                $scope.data.Ke = 4.6;
-                $scope.data.Cw = 2.21;
-                $scope.data.Ch = 0.033;
-                $scope.data.Cq = 0.000478;
+                // family 예외 처리
+                searchResults = $scope.exception_family.filter(function (item) {
+                    // console.log(item)
+                    return item.Family == $scope.data.name1
+                });
+                console.log(searchResults)
+
+                if (searchResults.length > 0) {
+                    $scope.message = 'Family alternative';
+                    // $scope.data.name2 = searchResults[0].Family;
+                    // $scope.data.name3 = "";
+                    // $scope.data.name4 = "";
+                    // $scope.data.name5 = "";
+                    $scope.data.Ke = searchResults[0].Ke;
+                    $scope.data.Cw = searchResults[0].Cw;
+                    $scope.data.Ch = searchResults[0].Ch;
+                    $scope.data.Cq = searchResults[0].Cq;
+                    $scope.data.refDoc = searchResults[0].ref
+                    seedName = $scope.data.refDoc;
+                } else {
+
+                    // 최종 constant 처리
+
+                    $scope.message = 'Constant alternative';
+                    // $scope.data.name2 = "Entandrophragma";
+                    // $scope.data.name3 = "angolense";
+                    // $scope.data.name4 = "";
+                    // $scope.data.name5 = "";
+                    $scope.data.refDoc = "Entandrophragma angolense(Tompsett, 1992)";
+
+                    $scope.data.Ke = 4.6;
+                    $scope.data.Cw = 2.21;
+                    $scope.data.Ch = 0.033;
+                    $scope.data.Cq = 0.000478;
+                    seedName = $scope.data.refDoc;
+                }
             }
         }
-        var seedName = $scope.data.name2;
-        if ($scope.data.name3) seedName = seedName + ' ' + $scope.data.name3;
-        if ($scope.data.name4) seedName = seedName + ' ' + $scope.data.name4 + ' ' + $scope.data.name5;
+        // var seedName = $scope.data.name2;
+        // if ($scope.data.name3) seedName = seedName + ' ' + $scope.data.name3;
+        // if ($scope.data.name4) seedName = seedName + ' ' + $scope.data.name4 + ' ' + $scope.data.name5;
         $scope.data.seedName = seedName;
         $rootScope.$broadcast('seed.found', $scope.data)
     }
@@ -129,14 +174,14 @@ app.controller('seed.info', function ($scope, $rootScope) {
     }
 
     $('#sandbox-container input').datepicker({});
-    $scope.varNames = {'': '-', 'subsp.': 'subsp.', 'var.': 'var.', 'for.': 'for.', 'cv.': 'cv.'};
+    $scope.varNames = {'subsp.': 'subsp.', 'var.': 'var.', 'for.': 'for.', 'cv.': 'cv.'};
     $scope.varNameChanged = function () {
         if (!$scope.data.name4) {
             $scope.isVarEmpty = true;
         } else {
             $scope.isVarEmpty = false;
         }
-        $scope.data.name5 = '';
+        // $scope.data.name5 = '';
     }
 
     $scope.seedChanged = function (item) {

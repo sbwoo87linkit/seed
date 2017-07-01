@@ -22,9 +22,9 @@ app.controller('seed.google_search', function ($scope, $rootScope) {
         buildKeywords(data);
     });
 
-    $scope.$on('seed.changed', function (event, data) {
-        buildKeywords(data);
-    });
+    // $scope.$on('seed.changed', function (event, data) {
+    //     buildKeywords(data);
+    // });
 
 
     $scope.keywordChecked = function(item) {

@@ -1,3 +1,4 @@
+
 <div class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">Seed Information</h3>
@@ -64,7 +65,9 @@
                                     <div class="col-md-12">
                                         <select class="form-control" ng-model="data.name4"
                                                 ng-options="key as value for (key , value) in varNames"
-                                                ng-change="varNameChanged()"></select>
+                                                ng-change="varNameChanged()">
+                                            <option value="">-- select --</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -87,8 +90,16 @@
                             <div class="row" style="height: 34px; line-height: 34px;">
                                 <div class="col-md-10">
                                     <h4>
-                                        <span class="label" ng-class="{'No data': 'label-default', 'Found': 'label-info', 'Genus alternative':'label-warning', 'Constant alternative':'label-danger'}[message]" ng-bind="message"></span>
-                                        {{data.seedName}} {{ ' - ' + data.refDoc }}
+                                        <span class="label"
+                                              ng-class="{'No data': 'label-default',
+                                              'Found': 'label-info',
+                                              'Genus alternative':'label-warning',
+                                              'Family alternative':'label-warning',
+                                              'Constant alternative':'label-danger'}[message]"
+                                              ng-bind="message"></span>
+                                        <!--<div>{{data.seedName}} {{ ' - ' + data.refDoc }}</div>-->
+                                        <!--<span class="small">{{data.seedName}} {{ ' - ' + data.refDoc }}</span>-->
+                                        <span class="small">{{data.seedName}}</span>
                                     </h4>
                                 </div>
                                 <div class="col-md-2">
@@ -112,7 +123,7 @@
                         <h5>Seed Lot No.</h5>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                                <input type="text" ng-model="app.lotNo" placeholder="Lot No."
+                                <input type="text" ng-model="data.lotNo" placeholder="Lot No."
                                        class="form-control">
                             </div>
                         </div>

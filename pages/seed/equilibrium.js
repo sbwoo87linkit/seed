@@ -10,17 +10,27 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
     d3.csv('data/oil.csv', function (data) {
         $scope.$apply(function () {
             $scope.oilData = data;
-            $scope.data.groundValue = $scope.oilData[0].oil;
+            // $scope.data.groundValue = $scope.oilData[0].oil;
 
         });
     });
 
     $scope.$on('seed.found', function (event, data) {
+        console.log(data)
         $scope.data.seedName = data.seedName;
+        $scope.data.lotNo = data.lotNo;
     })
 
-
     $scope.calculateWaterValue = function () {
+
+        console.log($scope.data.seedName)
+
+        if ($scope.data.seedName === undefined) {
+            $rootScope.modalMessage = 'No Species Information. Please find seed information first.'
+            $('#myModal').modal('show')
+            return;
+        }
+
 
         if (!$scope.data.groundValue || !!isNaN($scope.data.groundValue)) {
             $rootScope.modalMessage = 'Oil content field is required.(Type: Numeric)'
@@ -89,7 +99,7 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
         },
         credits: {enabled: false},
         title: {
-            text: 'Seed moisture isotherm'
+            text: ''
         },
         xAxis: {
             // type: 'linear',
@@ -141,14 +151,7 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
             }
         },
         exporting: {
-            filename: $rootScope.app.lotNo + ' Seed moisture isotherm('
-            + $scope.data.dryTemperature
-            + '°C) '
-            + $scope.data.name2
-            + ' '
-            + $scope.data.name3
-            + '-'
-            + utilService.formatDate(new Date)
+            filename:''
         }
     }
 
@@ -171,7 +174,7 @@ app.controller('seed.equilibrium', function ($scope, $rootScope, utilService) {
         ];
 
         // $scope.chartConfig.xAxis.categories = $scope.oilWaters.humidity;
-        var name =             $rootScope.app.lotNo + ' Seed moisture isotherm('
+        var name = $scope.data.lotNo + ' Seed moisture isotherm('
             + $scope.data.dryTemperature
             + '°C) '
             + ($scope.data.seedName ? $scope.data.seedName : '')

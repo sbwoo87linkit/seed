@@ -1,11 +1,14 @@
-<div class="panel panel-primary">
+
+<div class="equilibrium panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">Estimating Seed Equilibrium</h3>
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <h5>Oil Content(%)</h5>
+                <div class="label-container">
+                    <span>Oil Content(%)</span>
+                </div>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                         <input type="text" placeholder="" class="form-control"
@@ -14,11 +17,14 @@
                 </div>
             </div>
             <div class="col-md-8 col-sm-8 col-xs-12">
-                <h5>Ref.&nbsp;</h5>
+                <div class="label-container">
+                    <span>Ref.</span>
+                </div>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
-                        <select class="form-control" ng-model='data.groundValue'
+                        <select class="form-control" ng-model='data.groundValueSelected' ng-change="data.groundValue = data.groundValueSelected"
                                 ng-options='item.oil as item.name for item in oilData'>
+                            <option value="">-- select --</option>
                         </select>
                     </div>
                 </div>
@@ -26,7 +32,9 @@
         </div>
         <div class="row">
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <h5>Drying Temp.(°C)</h5>
+                <div class="label-container">
+                    <span>Drying Temp.(°C)</span>
+                </div>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                         <input type="text" placeholder="" class="form-control"
@@ -35,7 +43,9 @@
                 </div>
             </div>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <h5>Equilibrium RH(%)</h5>
+                <div class="label-container">
+                    <span>Equilibrium RH(%)</span>
+                </div>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                         <input type="text" placeholder="" class="form-control"
@@ -44,7 +54,9 @@
                 </div>
             </div>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <h5>Moisture Content(%)</h5>
+                <div class="label-container">
+                    <span>Moisture Content(%)</span>
+                </div>
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 form-group">
                         <input type="text" placeholder="" class="form-control" readonly

@@ -148,7 +148,7 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         },
         credits: {enabled: false},
         title: {
-            text: 'Seed moisture isotherm'
+            text: ''
         },
         xAxis: {
             type: 'datetime',
@@ -192,7 +192,8 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
             }
         },
         exporting: {
-            filename: $rootScope.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+            // filename: $rootScope.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+            filename: ''
         }
     }
 
@@ -201,7 +202,7 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
             name: 'Viability',
             data: $scope.seed.scaled
         }];
-        var name = $rootScope.app.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
+        var name = $scope.data.lotNo + ' Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + utilService.formatDate(new Date)
         $scope.chartConfig.title.text = name;
         $scope.chartConfig.exporting.filename = name;
     }
@@ -328,7 +329,7 @@ app.controller('seed.result', function ($scope, $rootScope, utilService) {
         csv = csv.join('\r\n');
         var blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
         // filename: 'Seed_Viability' + '-' + $scope.data.name2 + '_' + $scope.data.name3  + '-' + formatDate(new Date)
-        saveAs(blob, $rootScope.app.lotNo + ' Monitoring_date' + '-' + $scope.data.name2 + '_' + $scope.data.name3 + '-' + utilService.formatDate(new Date) + '.csv');
+        saveAs(blob, $scope.data.lotNo + ' Monitoring_date' + '-' + $scope.data.name2 + '_' + $scope.data.name3 + '-' + utilService.formatDate(new Date) + '.csv');
     }
 
 })
